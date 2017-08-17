@@ -4,7 +4,7 @@
 <html lang="en-US" class="no-js">
 <head>
 	<meta charset="UTF-8">
-	<title>Monkeysports Bulma</title>
+	<title>Bulma Starter Pack</title>
 
 	<link href="//www.google-analytics.com" rel="dns-prefetch">
     <link href="favicon.ico" rel="shortcut icon">
