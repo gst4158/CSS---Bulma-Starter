@@ -1,0 +1,79 @@
+// !compileOnSave
+// compileOnSave: false
+
+//==========================================================================//
+// Bulma 4.0 alpha settings
+//==========================================================================//
+
+/** Color classes
+* You can set any element to one of the 9 colors or 9 shades of grey:
+* http://bulma.io/documentation/modifiers/typography-helpers/
+.has-text-white
+.has-text-black
+.has-text-light
+.has-text-dark
+.has-text-primary
+.has-text-info
+.has-text-success
+.has-text-warning
+.has-text-danger
+.has-text-black-bis
+.has-text-black-ter
+.has-text-grey-darker
+.has-text-grey-dark
+.has-text-grey
+.has-text-grey-light
+.has-text-grey-lighter
+.has-text-white-ter
+.has-text-white-bis
+*/
+
+//==========================================================================//
+// Font Familes & Weights
+//==========================================================================//
+$font-opensans: 'Open Sans';
+$font-icons: 'Material Icons';
+$font-icons: 'FontAwesome';
+
+$font-weight-light: 300;
+$font-weight-normal: 400;
+$font-weight-semibold: 600;
+$font-weight-bold: 700;
+$small-font-size: 10px;
+
+$primary-font: $font-opensans;
+$secondary-font: $font-opensans;
+
+$font-list : (
+  // each string separated by a tabbed space is an index.
+  // 'css-class name' 'font-family'  'font weight'
+
+  // families
+  "txt-opensans-light"      $font-opensans  $font-weight-light,
+  "txt-opensans-regular"    $font-opensans  $font-weight-normal,
+  "txt-opensans-semibold"   $font-opensans  $font-weight-semibold,
+  "txt-opensans-bold"       $font-opensans  $font-weight-bold,
+
+);
+
+// bootstrap 4.0 alpha overrides
+$font-family-sans-serif: $font-opensans;
+$font-family-serif:      Georgia, "Times New Roman", Times, serif !default;
+$font-family-monospace:  Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace !default;
+$font-family-base:       $font-family-sans-serif !default;
+$link-hover-decoration: none !default; // override bootstrap
+
+//==========================================================================//
+// Overrides Stucture
+//==========================================================================//
+$directions: (
+  top,
+  right,
+  bottom,
+  left,
+) !default;
+
+$distances : (
+    //0, 5, 10, 15, 20, 25, 30, 33, 35, 40, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100
+    0, 5, 10, 15, 20, 25, 30, 35, 40
+);

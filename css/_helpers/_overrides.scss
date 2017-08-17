@@ -1,0 +1,61 @@
+// !compileOnSave
+// compileOnSave: false
+//==========================================================================//
+// Overrides - snippets of code that generates mass portions of CSS
+//==========================================================================//
+/* breakpoint over rides */
+$breakpoints:('desktop', 'mobile', 'tablet');
+@each $point in $breakpoints {
+  @include media-query( unquote("#{$point}") ) {
+    .#{$point}-hide {
+      display: none;
+    }
+  }
+};
+
+//==========================================================================//
+// Creates global text items
+// $font-list is an array of all available font families
+// generates: .txt-Opensans-cond-light {font-family: "'Opensans-cond-light', Arial, Helvetica, sans-serif" !important; font-weight: normal !important; }
+//==========================================================================//
+/* font-family overrides */
+@each $family in $font-list {
+  $txt-temp-var: '.' + nth($family, 1);
+  #{$txt-temp-var} {
+    font-family: nth($family, 2) !important;
+    font-weight: nth($family, 3) !important;
+  }
+}
+
+/* force the smaller size font-family so it's readable */
+small, .small {
+    font-family: $secondary-font;
+}
+
+/* override oswald typeface for form interactions */
+label, input, textarea, select, textarea {
+    font-family: $secondary-font;
+}
+
+//==========================================================================//
+// Margin/Padding Overrides - quick CSS classes to add extra padding/margin to elements
+// useage: .margin-top-20, desktop-margin-top-40
+//==========================================================================//
+@include base-overrides();
+@each $breakpoint in map-keys($bulmaBreakpoints) {
+    @include media-query($breakpoint) {
+        @include base-overrides($breakpoint);
+    }// END mixin
+}// END breakpoint
+
+//==========================================================================//
+// Basic Overrides
+//==========================================================================//
+@each $breakpoint in map-keys($bulmaBreakpoints) {
+    @include media-query($breakpoint) {
+        .#{$breakpoint}-display-inline-block {display: inline-block !important;}
+        .#{$breakpoint}-display-block {display: block !important;}
+    }// END mixin
+}// END breakpoint
+.display-inline-block {display: inline-block !important;}
+.display-block {display: block !important;}

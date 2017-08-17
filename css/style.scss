@@ -1,0 +1,42 @@
+// Bulma Import
+// http://bulma.io/
+// ============================================//
+@import '_bulma/bulma.sass';
+
+// Imports
+// ============================================//
+// custom imports
+@import '_helpers/_functions.scss';
+@import '_helpers/_variables.scss';
+@import '_helpers/_mixins.scss';
+
+
+// Font Awesome Import
+// http://fontawesome.io/icons/
+// ============================================//
+@import "_font-awesome/font-awesome.scss";
+
+// Javascript related modules
+// ============================================//
+@import "_flexslider.scss";
+
+// Include Modules Here:
+// ============================================//
+@import "_modal.scss";
+@import "_typography.scss";
+
+// Generate font-face styles
+// ============================================//
+@include font-face($font-icons,    '../fonts/fontawesome-webfont',      $font-weight-normal);
+@include font-face($font-opensans, '../fonts/opensans-light-webfont',   $font-weight-light);
+@include font-face($font-opensans, '../fonts/opensans-regular-webfont', $font-weight-normal);
+@include font-face($font-opensans, '../fonts/opensans-bold-webfont',    $font-weight-semibold);
+@include font-face($font-opensans, '../fonts/opensans-semibold-webfont',$font-weight-bold);
+
+// @debug $colors;
+// @debug map-get($colors, "white");
+
+// Overrides - Load this part last
+// ============================================//
+@import '_helpers/_overrides.scss';
+
