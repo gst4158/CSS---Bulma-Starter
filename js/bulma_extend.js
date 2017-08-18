@@ -92,7 +92,7 @@ bulma.device = (function () {
 
   // settings to get passed into options
   var settings = {
-    mediaQueries,
+    mediaQueries : mediaQueries,
     breakpointStyleMap: {
 			mobile: 'screen and (max-width: '+ mediaQueries.mobile +'px)',
 			tablet: 'screen and (min-width: '+ mediaQueries.tablet.min +'x) and (max-width: '+ mediaQueries.tablet.max +'px)',
