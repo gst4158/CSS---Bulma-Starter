@@ -12,7 +12,7 @@
     
     .modal-card {
         position: fixed;
-        max-height: calc(100vh - 40px);
+        max-height: calc(100vh - 150px);
         opacity: 0;
         top: 45%;
         left: 50%;
@@ -38,6 +38,8 @@
         .modal-card {
             top: 50%;
             opacity: 1;
+            margin: 0;
+            padding: 0 40px;
         }
         .modal-background {
             opacity: 1;
