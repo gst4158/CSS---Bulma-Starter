@@ -176,7 +176,7 @@ include_once('_inc/header.php');
 
             <h6>Click the button below to display the modal</h6>
             <a class="button is-primary is-large modal-button" href="#modal-ter">Launch modal card</a>
-
+            
         </div>
         <div class="container margin-top-10">
             <pre class="box">
@@ -213,6 +213,7 @@ include_once('_inc/header.php');
 
 <!-- page modals -->
 <section aria-hidden>
+
     <!-- modal one -->
     <div id="modal-ter" class="modal">
         <div class="modal-background"></div>
@@ -223,7 +224,7 @@ include_once('_inc/header.php');
             </header>
             <section class="modal-card-body">
                 <a class="button is-primary is-large modal-button btn-close" href="#modal-ter2">I heard you like modals, so I put a modal button in your modal so you could have a modal</a>
-                <!-- Content ... -->
+                <!-- Content -->
                 <p>Icing brownie danish lemon drops sweet topping wafer candy canes icing. Pastry bear claw liquorice chocolate danish lemon drops oat cake. Pastry topping pie caramels. Croissant tart chocolate cake jelly beans. Liquorice brownie cookie lemon drops chocolate. Chocolate bar cotton candy lemon drops jelly cake halvah. Pie donut jelly beans bonbon chupa chups tiramisu. Tart carrot cake brownie macaroon. Dragée gummi bears caramels. Gummi bears cotton candy sweet roll jelly-o bear claw danish. Marshmallow gingerbread jujubes candy bear claw wafer muffin. Carrot cake cotton candy gummies.</p>
                 <p>Icing brownie danish lemon drops sweet topping wafer candy canes icing. Pastry bear claw liquorice chocolate danish lemon drops oat cake. Pastry topping pie caramels. Croissant tart chocolate cake jelly beans. Liquorice brownie cookie lemon drops chocolate. Chocolate bar cotton candy lemon drops jelly cake halvah. Pie donut jelly beans bonbon chupa chups tiramisu. Tart carrot cake brownie macaroon. Dragée gummi bears caramels. Gummi bears cotton candy sweet roll jelly-o bear claw danish. Marshmallow gingerbread jujubes candy bear claw wafer muffin. Carrot cake cotton candy gummies.</p>
                 <p>Icing brownie danish lemon drops sweet topping wafer candy canes icing. Pastry bear claw liquorice chocolate danish lemon drops oat cake. Pastry topping pie caramels. Croissant tart chocolate cake jelly beans. Liquorice brownie cookie lemon drops chocolate. Chocolate bar cotton candy lemon drops jelly cake halvah. Pie donut jelly beans bonbon chupa chups tiramisu. Tart carrot cake brownie macaroon. Dragée gummi bears caramels. Gummi bears cotton candy sweet roll jelly-o bear claw danish. Marshmallow gingerbread jujubes candy bear claw wafer muffin. Carrot cake cotton candy gummies.</p>
