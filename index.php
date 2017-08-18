@@ -62,70 +62,71 @@ include_once('_inc/header.php');
 </section>
 
 <!-- icons example -->
-<section class="hero is-info padding-vertical-20">
-    <div class="container">
-        <h3>Icons</h3>
-        <p>This customized Bulma has <a href="http://fontawesome.io/" tilte="font-awesome">font-awesome</a> baked in.</p>
-        <div class="columns">
-            <div class="column">
-                <h6><i class="fa fa-flag" aria-hidden="true"></i> One Font, 675 Icons</h6>
-                <p>In a single collection, Font Awesome is a pictographic language of web-related actions.</p>
+<section class="hero is-info">
+    <section class="section">
+        <div class="container">
+            <h3>Icons</h3>
+            <p>This customized Bulma has <a href="http://fontawesome.io/" tilte="font-awesome">font-awesome</a> baked in.</p>
+            <div class="columns">
+                <div class="column">
+                    <h6><i class="fa fa-flag" aria-hidden="true"></i> One Font, 675 Icons</h6>
+                    <p>In a single collection, Font Awesome is a pictographic language of web-related actions.</p>
+                </div>
+                
+                <div class="column">
+                    <h6><i class="fa fa-ban" aria-hidden="true"></i> No JavaScript Required</h6>
+                    <p>Fewer compatibility concerns because Font Awesome doesn't require JavaScript.</p>
+                </div>
+                
+                <div class="column">
+                    <h6><i class="fa fa-arrows-alt" aria-hidden="true"></i> Infinite Scalability</h6>
+                    <p>Scalable vector graphics means every icon looks awesome at any size.</p>
+                </div>
             </div>
-            
-            <div class="column">
-                <h6><i class="fa fa-ban" aria-hidden="true"></i> No JavaScript Required</h6>
-                <p>Fewer compatibility concerns because Font Awesome doesn't require JavaScript.</p>
+            <div class="columns">
+                <div class="column">
+                    <h6><i class="fa fa-microphone" aria-hidden="true"></i> Free, as in Speech</h6>
+                    <p>Font Awesome is completely free for commercial use. Check out the <a href="http://fontawesome.io/license/">license</a>.</p>
+                </div>
+                <div class="column">
+                    <h6><i class="fa fa-pencil" aria-hidden="true"></i> CSS Control</h6>
+                    <p>Easily style icon color, size, shadow, and anything that's possible with CSS.</p>
+                </div>
+                <div class="column">
+                    <h6><i class="fa fa-eye" aria-hidden="true"></i> Perfect on Retina Displays</h6>
+                    <p>Font Awesome icons are vectors, which mean they're gorgeous on high-resolution displays.</p>
+                </div>
             </div>
-            
-            <div class="column">
-                <h6><i class="fa fa-arrows-alt" aria-hidden="true"></i> Infinite Scalability</h6>
-                <p>Scalable vector graphics means every icon looks awesome at any size.</p>
+            <div class="columns">
+                <div class="column">
+                    <h6><i class="fa fa-gamepad" aria-hidden="true"></i> Plays Well with Others</h6>
+                    <p>Font Awesome works great with all frameworks.</p>
+                </div>
+                <div class="column">
+                    <h6><i class="fa fa-desktop" aria-hidden="true"></i> Desktop Friendly</h6>
+                    <p>To use on the desktop or for a complete set of vectors, check out the <a href="http://fontawesome.io/cheatsheet/" target="_blank">cheatsheet</a>.</p>
+                </div>
+                <div class="column">
+                    <h6><i class="fa fa-wheelchair" aria-hidden="true"></i> Accessibility-minded</h6>
+                    <p>Font Awesome <i class="fa fa-heart" aria-hidden="true"></i><span class="sr-only">loves</span> screen readers and <a href="http://fontawesome.io/accessibility/">helps make your icons accessible</a> on the web.</p>
+                </div>
             </div>
         </div>
-        <div class="columns">
-            <div class="column">
-                <h6><i class="fa fa-microphone" aria-hidden="true"></i> Free, as in Speech</h6>
-                <p>Font Awesome is completely free for commercial use. Check out the <a href="http://fontawesome.io/license/">license</a>.</p>
-            </div>
-            <div class="column">
-                <h6><i class="fa fa-pencil" aria-hidden="true"></i> CSS Control</h6>
-                <p>Easily style icon color, size, shadow, and anything that's possible with CSS.</p>
-            </div>
-            <div class="column">
-                <h6><i class="fa fa-eye" aria-hidden="true"></i> Perfect on Retina Displays</h6>
-                <p>Font Awesome icons are vectors, which mean they're gorgeous on high-resolution displays.</p>
-            </div>
+        <div class="container margin-top-10">
+            <pre class="box">
+    &lt;p&gt;
+        &lt;i class=&quot;fa fa-github&quot; aria-hidden=&quot;true&quot;&gt;&lt;/i&gt;
+        Example Text
+    &lt;/p&gt;    
+            </pre>
         </div>
-        <div class="columns">
-            <div class="column">
-                <h6><i class="fa fa-gamepad" aria-hidden="true"></i> Plays Well with Others</h6>
-                <p>Font Awesome works great with all frameworks.</p>
-            </div>
-            <div class="column">
-                <h6><i class="fa fa-desktop" aria-hidden="true"></i> Desktop Friendly</h6>
-                <p>To use on the desktop or for a complete set of vectors, check out the <a href="http://fontawesome.io/cheatsheet/" target="_blank">cheatsheet</a>.</p>
-            </div>
-            <div class="column">
-                <h6><i class="fa fa-wheelchair" aria-hidden="true"></i> Accessibility-minded</h6>
-                <p>Font Awesome <i class="fa fa-heart" aria-hidden="true"></i><span class="sr-only">loves</span> screen readers and <a href="http://fontawesome.io/accessibility/">helps make your icons accessible</a> on the web.</p>
-            </div>
-        </div>
-    </div>
-    <div class="container margin-top-10">
-        <pre class="box">
-&lt;p&gt;
-    &lt;i class=&quot;fa fa-github&quot; aria-hidden=&quot;true&quot;&gt;&lt;/i&gt;
-    Example Text
-&lt;/p&gt;    
-        </pre>
-    </div>
+    </section>
 </section>
 
 <!-- slider example -->
 <section class="section">
     <div class="container">
         <h3>Image Sliders</h3>
-        <a class="button is-primary is-large modal-button" href="#modal-ter">Launch modal card</a>
         <p>Bulma does not come with any slider functionality. <a href="https://woocommerce.com/flexslider/" title="Flexslider" target="_blank">Flexslider</a> has been packaged in since it is responsive, mobile friendly, supports multiple types of media, and has a plethora of options</p>
         <div class="has-text-centered">
             <div class="flexslider">
@@ -164,41 +165,42 @@ include_once('_inc/header.php');
 
 <!-- modal example -->
 <section class="hero is-info padding-vertical-20">
-    <div class="container">
-        <h3>Popup Modals</h3>
-        <p>Bulma does not come with any JS by default. This customized framework contains both script and css markup to control modals with JS callback functions and more. Baked in are friendly steps taken to reduce quirks in mobile browsers such as safari.</p>
+    <section class="section">
+        <div class="container">
+            <h3>Popup Modals</h3>
+            <p>Bulma does not come with any JS by default. This customized framework contains both script and css markup to control modals with JS callback functions and more. Baked in are friendly steps taken to reduce quirks in mobile browsers such as safari.</p>
 
-        <p><i class="fa fa-clipboard" aria-hidden="true"></i> Modals can contain several sub-sections including a <code>modal-card-head</code>, <code>modal-card-body</code>, and <code>modal-card-foot</code></p>
-        <p><i class="fa fa-times-circle" aria-hidden="true"></i> There are several triggers to close a modal, including: <code>.modal-background</code>, <code>.btn-close</code>, <code>.delete</code></p>
-        
+            <p><i class="fa fa-clipboard" aria-hidden="true"></i> Modals can contain several sub-sections including a <code>modal-card-head</code>, <code>modal-card-body</code>, and <code>modal-card-foot</code></p>
+            <p><i class="fa fa-times-circle" aria-hidden="true"></i> There are several triggers to close a modal, including: <code>.modal-background</code>, <code>.btn-close</code>, <code>.delete</code></p>
+            
 
-        <h6>Click the button below to display the modal</h6>
-        <a class="button is-primary is-large modal-button" href="#modal-ter">Launch modal card</a>
+            <h6>Click the button below to display the modal</h6>
+            <a class="button is-primary is-large modal-button" href="#modal-ter">Launch modal card</a>
 
-    </div>
-    <div class="container margin-top-10">
-        <pre class="box">
-&lt;div class=&quot;modal&quot;&gt;
-    &lt;div class=&quot;modal-background&quot;&gt;&lt;/div&gt;
-    &lt;div class=&quot;modal-card&quot;&gt;
-        &lt;header class=&quot;modal-card-head&quot;&gt;
-            &lt;p class=&quot;modal-card-title&quot;&gt;Modal title&lt;/p&gt;
-            &lt;button class=&quot;delete btn-close&quot;&gt;&lt;/button&gt;
-        &lt;/header&gt;
-        &lt;section class=&quot;modal-card-body&quot;&gt;
-            &lt;!-- Content ... --&gt;
-        &lt;/section&gt;
-        &lt;footer class=&quot;modal-card-foot&quot;&gt;
-            &lt;a class=&quot;button btn-close&quot;&gt;Cancel&lt;/a&gt;
-        &lt;/footer&gt;
+        </div>
+        <div class="container margin-top-10">
+            <pre class="box">
+    &lt;div class=&quot;modal&quot;&gt;
+        &lt;div class=&quot;modal-background&quot;&gt;&lt;/div&gt;
+        &lt;div class=&quot;modal-card&quot;&gt;
+            &lt;header class=&quot;modal-card-head&quot;&gt;
+                &lt;p class=&quot;modal-card-title&quot;&gt;Modal title&lt;/p&gt;
+                &lt;button class=&quot;delete btn-close&quot;&gt;&lt;/button&gt;
+            &lt;/header&gt;
+            &lt;section class=&quot;modal-card-body&quot;&gt;
+                &lt;!-- Content ... --&gt;
+            &lt;/section&gt;
+            &lt;footer class=&quot;modal-card-foot&quot;&gt;
+                &lt;a class=&quot;button btn-close&quot;&gt;Cancel&lt;/a&gt;
+            &lt;/footer&gt;
+        &lt;/div&gt;
     &lt;/div&gt;
-&lt;/div&gt;
-        </pre>
-    </div>
+            </pre>
+        </div>
+    </section>
 </section>
 
 <section class="section">
-
     <div class="container margin-top-40">
         <a class="button smoothscroll" href="#top">
             <span>Back to Top</span>
@@ -207,7 +209,6 @@ include_once('_inc/header.php');
             </span>
         </a>
     </div>    
-    
 </section>
 
 <!-- page modals -->
