@@ -1,0 +1,11 @@
+// !compileOnSave
+// compileOnSave: false
+//==========================================================================//
+@include media-query( $breakpoints:('mobile', 'tablet') ) {
+    .has-dropdown  {
+        .navbar-dropdown {
+            display: none;
+        }
+    }
+    
+}
