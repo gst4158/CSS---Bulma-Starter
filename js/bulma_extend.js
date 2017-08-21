@@ -145,6 +145,7 @@ bulma.device = (function () {
   return devicePublic;
 
 }());
+
 //--------------------------------------------//
 /**
 * Modal Options
@@ -157,11 +158,17 @@ bulma.device = (function () {
         new bulma.modal({
             trigger : $(this),
             target : $(this).attr('href'),
+            modalClickOpen : function() {
+                console.log('modal init open');
+            },
+            modalClickClose : function() {
+                console.log('modal init close');
+            }
             modalOpen : function() {
-                console.log('modal open');
+                console.log('modal finished opening');
             },
             modalClose : function() {
-                console.log('modal close');
+                console.log('modal finished closing');
             }
         });
     });
@@ -224,15 +231,21 @@ bulma.modal = function(settings) {
     this.modalAction = function(callback) {
         
         // toggle modal
-        jQuery(_settings.target).stop(true, true).fadeToggle().toggleClass(_settings.elmClass);
+        jQuery(_settings.target).stop(true, true).fadeToggle(function(){
+            // callback
+            _modalComplete(
+                jQuery(_settings.target).hasClass(_settings.elmClass) ? 'open' : 'close'
+            );
+        }).toggleClass(_settings.elmClass);
+
+        // callback
+        _modalClicked(
+            jQuery(_settings.target).hasClass(_settings.elmClass) ? 'open' : 'close'
+        );
         
         // reset body css so no jumping takes place
         setBodyCSS();
-        
-        // callback
-        _modalComplete(
-            jQuery(_settings.target).hasClass(_settings.elmClass) ? 'open' : 'close'
-        );
+                
     }
 
     // bind event which triggers modal actions
@@ -270,6 +283,18 @@ bulma.modal = function(settings) {
         }
     }
 
+    // calls callback function on trigger click event
+    function _modalClicked(callbackType) {
+
+        // if a callback was supplied, fire it now
+        if ( callbackType == 'open' && typeof _settings.modalClickOpen === 'function' ) {
+            _settings.modalClickOpen.call( thatModal );
+        } else if ( callbackType == 'close' && typeof _settings.modalClickClose === 'function' ) {
+            _settings.modalClickClose.call( thatMenu );
+        }
+        
+    }
+
     // function to set the trigger
     this.setTrigger = function ( newTrigger ) {
         _bindTriggerOpenEvent();
@@ -279,8 +304,285 @@ bulma.modal = function(settings) {
     // finalize setup
     thatModal.setTrigger( _settings.target );
 
-}; // END smoothscroll
+}; // END modal toggle
 
+//--------------------------------------------//
+/**
+* Menu toggle Options
+* Dynamically create navigation menu dropdown toggles
+* Will attempt to use triggers data-trigger attr; but you can add custom triggers and targets as well
+* Contains callbacks on open and close events
+* Useage:
+    // init menu items
+    $('.navbar-burger').each( function () {
+        new bulma.menu({
+            trigger : $(this),
+            target : $(this).attr('href'),
+            menuClickOpen : function() {
+                console.log('menu init open');
+            },
+            menuClickClose : function() {
+                console.log('menu init close');
+            }
+            menuOpen : function() {
+                console.log('menu finished opening');
+            },
+            menuClose : function() {
+                console.log('menu finished closing');
+            }
+        });
+    });
+    
+*/
+bulma.menu = function(settings) {
+    // kill function if no trigger set
+    if ( !settings.trigger ) return false;
+
+    // get default settings
+    var thatMenu = this;
+    var object = this.settings = settings;
+    var _settings = {
+        trigger   : settings.trigger,
+        elmClass  : 'menu-active',
+        bindOn    : 'click',
+        
+        // trigger dependant class name
+        targetHook  : '.navbar-burger',
+
+    };
+    // merge default and custom settings into one object
+    var _settings = Object.assign({}, _settings, object);
+    
+
+    // set modal target
+    _settings.target = jQuery( '#'+_setTargetFromData() );
+
+    // attempts to set target from the trigger href
+    function _setTargetFromData() {
+        if ( !_settings.target ) {
+            // check for menu target from data attr
+            if ( _settings.trigger && _settings.trigger.hasClass( _settings.targetHook ) && _settings.trigger.data( 'target' ) ) {
+                var triggerHref = _settings.trigger.data( 'target' );
+                return triggerHref;
+            }
+        } else {
+            return _settings.target;
+        }
+    }
+
+    // menu open function
+    this.menuAction = function(callback) {
+        
+        // toggle menu
+        jQuery(_settings.target).stop(true, true).slideToggle(function(){
+            // callback
+            _menuComplete(
+                jQuery(_settings.target).hasClass(_settings.elmClass) ? 'open' : 'close'
+            );
+        }).toggleClass(_settings.elmClass);
+        
+        // callback
+        _menuClicked(
+            jQuery(_settings.target).hasClass(_settings.elmClass) ? 'open' : 'close'
+        );
+    }
+
+    // bind event which triggers menu actions
+    function _bindTriggerOpenEvent(){
+        _settings.bindOn = ( _settings.bindOn === 'hover' ? 'mouseover' : _settings.bindOn );
+        var triggerEvent = ( typeof _settings.bindOn === 'string' && _settings.bindOn.length ) ? _settings.bindOn : 'click';
+
+        // opens menu when trigger is clicked
+        jQuery(_settings.trigger).unbind().on( triggerEvent + ' touch', function (e) {
+            e.preventDefault();
+            thatMenu.menuAction('open');
+        });
+        
+        // closes menu when target areas are clicked
+        jQuery(_settings.target).find(_settings.targetHook).unbind().on( triggerEvent + ' touch', function (e) {
+            e.preventDefault();
+            thatMenu.menuAction('close');
+        });
+    }
+
+    // calls callback function after animation
+    function _menuComplete(callbackType) {
+
+        // if a callback was supplied, fire it now
+        if ( callbackType == 'open' && typeof _settings.menuOpen === 'function' ) {
+            _settings.menuOpen.call( thatMenu );
+        } else if ( callbackType == 'close' && typeof _settings.menuClose === 'function' ) {
+            _settings.menuClose.call( thatMenu );
+        }
+        
+    }
+
+    // calls callback function on trigger click event
+    function _menuClicked(callbackType) {
+
+        // if a callback was supplied, fire it now
+        if ( callbackType == 'open' && typeof _settings.menuClickOpen === 'function' ) {
+            _settings.menuClickOpen.call( thatMenu );
+        } else if ( callbackType == 'close' && typeof _settings.menuClickClose === 'function' ) {
+            _settings.menuClickClose.call( thatMenu );
+        }
+        
+    }
+
+    // function to set the trigger
+    this.setTrigger = function ( newTrigger ) {
+        _bindTriggerOpenEvent();
+        return _settings.trigger;
+    };
+
+    // finalize setup
+    thatMenu.setTrigger( _settings.target );
+
+}; // END menu toggle
+
+
+//--------------------------------------------//
+/**
+* SubMenu toggle Options
+* Dynamically create navigation submenu dropdown toggles
+* Finds bulma sub dropdown items and slide toggles on click
+* Contains callbacks on open and close events
+* Useage:
+    // init menu items
+    $('.has-dropdown').each( function () {
+        new bulma.menu({
+            trigger : $(this),
+            toggleAll : true // close all other menus on click
+            target : $(this).attr('href'),
+            submenuClickOpen : function() {
+                console.log('menu init open');
+            },
+            submenuClickClose : function() {
+                console.log('menu init close');
+            }
+            submenuOpen : function() {
+                console.log('menu finished opening');
+            },
+            submenuClose : function() {
+                console.log('menu finished closing');
+            }
+        });
+    });
+*/
+bulma.submenu = function(settings) {
+    // kill function if no trigger set
+    if ( !settings.trigger ) return false;
+
+    // get default settings
+    var thatSubMenu = this;
+    var object = this.settings = settings;
+    var _settings = {
+        trigger   : settings.trigger,
+        elmClass  : 'submenu-active',
+        bindOn    : 'click',
+        toggleAll : false, // close all other menus on click
+        
+        // trigger dependant class name
+        targetHook  : '.has-dropdown',
+        triggerHook : '.navbar-dropdown',
+        triggerParent : $(settings.trigger).closest('.navbar-menu'),
+
+    };
+    // merge default and custom settings into one object
+    var _settings = Object.assign({}, _settings, object);
+    
+
+    // set modal target
+    _settings.target = jQuery(_settings.trigger).find(_settings.triggerHook);
+
+    // attempts to set target from the trigger href
+    function _setTargetFromData() {
+        if ( !_settings.target ) {
+            // check for submenu target from data attr
+            if ( _settings.trigger && _settings.trigger.hasClass( _settings.targetHook ) ) {
+                var triggerHref = _settings.trigger.find(triggerHook);
+                return triggerHref;
+            }
+        } else {
+            return _settings.target;
+        }
+    }
+
+    // submenu open function
+    this.submenuAction = function(callback) {
+
+        // if enabled, close all other dropdowns
+        if (_settings.toggleAll == true) {
+            jQuery(_settings.triggerParent).find(_settings.triggerHook).slideUp();
+        }
+        
+        
+        // toggle menu
+        jQuery(_settings.target).stop(true, true).slideToggle(function(){
+            // callback
+            _submenuComplete(
+                jQuery(_settings.target).hasClass(_settings.elmClass) ? 'open' : 'close'
+            );
+        }).toggleClass(_settings.elmClass);
+        
+        // callback
+        _submenuClicked(
+            jQuery(_settings.target).hasClass(_settings.elmClass) ? 'open' : 'close'
+        );
+    }
+
+    // bind event which triggers submenu actions
+    function _bindTriggerOpenEvent(){
+        _settings.bindOn = ( _settings.bindOn === 'hover' ? 'mouseover' : _settings.bindOn );
+        var triggerEvent = ( typeof _settings.bindOn === 'string' && _settings.bindOn.length ) ? _settings.bindOn : 'click';
+
+        // opens submenu when trigger is clicked
+        jQuery(_settings.trigger).unbind().on( triggerEvent + ' touch', function (e) {
+            e.preventDefault();
+            thatSubMenu.submenuAction('open');
+        });
+        
+        // closes menu when target areas are clicked
+        jQuery(_settings.target).find(_settings.targetHook).unbind().on( triggerEvent + ' touch', function (e) {
+            e.preventDefault();
+            thatSubMenu.submenuAction('close');
+        });
+    }
+
+    // calls callback function after animation
+    function _submenuComplete(callbackType) {
+
+        // if a callback was supplied, fire it now
+        if ( callbackType == 'open' && typeof _settings.submenuOpen === 'function' ) {
+            _settings.submenuOpen.call( thatSubMenu );
+        } else if ( callbackType == 'close' && typeof _settings.submenuClose === 'function' ) {
+            _settings.submenuClose.call( thatSubMenu );
+        }
+        
+    }
+
+    // calls callback function on trigger click event
+    function _submenuClicked(callbackType) {
+
+        // if a callback was supplied, fire it now
+        if ( callbackType == 'open' && typeof _settings.submenuClickOpen === 'function' ) {
+            _settings.submenuClickOpen.call( thatSubMenu );
+        } else if ( callbackType == 'close' && typeof _settings.submenuClickClose === 'function' ) {
+            _settings.submenuClickClose.call( thatSubMenu );
+        }
+        
+    }
+
+    // function to set the trigger
+    this.setTrigger = function ( newTrigger ) {
+        _bindTriggerOpenEvent();
+        return _settings.trigger;
+    };
+
+    // finalize setup
+    thatSubMenu.setTrigger( _settings.target );
+
+}; // END submenu toggle
 
 //--------------------------------------------//
 /**
@@ -493,6 +795,18 @@ $(document).ready(function() {
             trigger : $(this),
         });
     });
+
     
-    
+    $('.navbar-burger').each( function () {
+        new bulma.menu({
+            trigger : $(this),
+            target : $(this).data('target'),
+        });
+    });    
+
+    $('.has-dropdown').each( function () {
+        new bulma.submenu({
+            trigger : $(this),
+        });
+    }); 
 }); // END document ready
