@@ -13,25 +13,6 @@ Tags: minimalist, tremplate, html5
 include_once('_inc/header.php');
 ?>
 
-<section class="hero is-primary">
-  <div class="hero-head">
-    <div class="container">
-      {% include header.html %}
-    </div>
-  </div>
-
-  <div class="hero-body">
-    <div class="container">
-      <h1 class="title">
-        Templates
-      </h1>
-      <h2 class="subtitle">
-        <strong>Free</strong> HTML templates that make use of Bulma <strong>out of the box</strong>
-      </h2>
-    </div>
-  </div>
-</section>
-
 <!-- grid example -->
 <section class="section">
     <div class="container">
