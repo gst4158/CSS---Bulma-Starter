@@ -172,7 +172,7 @@ bulma.device = (function () {
             }
         });
     });
-    
+
 */
 bulma.modal = function(settings) {
     // kill function if no trigger set
@@ -185,7 +185,7 @@ bulma.modal = function(settings) {
         trigger   : settings.trigger,
         elmClass  : 'modal-active',
         bindOn    : 'click',
-        
+
         // modal settings & class names
         targetHook  : '.modal',
 
@@ -216,7 +216,7 @@ bulma.modal = function(settings) {
     function setBodyCSS() {
         jQuery('html').css({
             overflow:   jQuery(_settings.targetHook).hasClass(_settings.elmClass) == false ? '' : _settings.overflow,
-            width:      jQuery(_settings.targetHook).hasClass(_settings.elmClass) == false ? '' : _settings.width, 
+            width:      jQuery(_settings.targetHook).hasClass(_settings.elmClass) == false ? '' : _settings.width,
         })
     }
 
@@ -229,7 +229,7 @@ bulma.modal = function(settings) {
 
     // modal open function
     this.modalAction = function(callback) {
-        
+
         // toggle modal
         jQuery(_settings.target).stop(true, true).fadeToggle(function(){
             // callback
@@ -242,10 +242,10 @@ bulma.modal = function(settings) {
         _modalClicked(
             jQuery(_settings.target).hasClass(_settings.elmClass) ? 'open' : 'close'
         );
-        
+
         // reset body css so no jumping takes place
         setBodyCSS();
-                
+
     }
 
     // bind event which triggers modal actions
@@ -257,16 +257,16 @@ bulma.modal = function(settings) {
         jQuery(_settings.trigger).unbind().on( triggerEvent + ' touch', function (e) {
             e.preventDefault();
             thatModal.modalAction('open');
-            
+
             // fix scrolling in safari
             jQuery(_settings.target)[0].addEventListener('webkitAnimationEnd', fixSafariScrolling);
         });
-        
+
         // closes modal when target areas are clicked
         jQuery(_settings.target).find('.modal-background, .btn-close, .delete').unbind().on( triggerEvent + ' touch', function (e) {
             e.preventDefault();
             thatModal.modalAction('close');
-            
+
             // fix scrolling in safari
             jQuery(_settings.target)[0].addEventListener('webkitAnimationEnd', fixSafariScrolling);
         });
@@ -292,7 +292,7 @@ bulma.modal = function(settings) {
         } else if ( callbackType == 'close' && typeof _settings.modalClickClose === 'function' ) {
             _settings.modalClickClose.call( thatMenu );
         }
-        
+
     }
 
     // function to set the trigger
@@ -332,7 +332,7 @@ bulma.modal = function(settings) {
             }
         });
     });
-    
+
 */
 bulma.menu = function(settings) {
     // kill function if no trigger set
@@ -345,14 +345,17 @@ bulma.menu = function(settings) {
         trigger   : settings.trigger,
         elmClass  : 'menu-active',
         bindOn    : 'click',
-        
+		resetOnBreakpoint : true, // resets menu when user device size is not in toggleBreakpoints array
+		toggleBreakpoints : ['mobile', 'tablet'], // toggle menus only on these breakpoints
+
         // trigger dependant class name
         targetHook  : '.navbar-burger',
+		menuHook : '.navbar-menu',
 
     };
     // merge default and custom settings into one object
     var _settings = Object.assign({}, _settings, object);
-    
+
 
     // set modal target
     _settings.target = jQuery( '#'+_setTargetFromData() );
@@ -372,7 +375,7 @@ bulma.menu = function(settings) {
 
     // menu open function
     this.menuAction = function(callback) {
-        
+
         // toggle menu
         jQuery(_settings.target).stop(true, true).slideToggle(function(){
             // callback
@@ -380,7 +383,7 @@ bulma.menu = function(settings) {
                 jQuery(_settings.target).hasClass(_settings.elmClass) ? 'open' : 'close'
             );
         }).toggleClass(_settings.elmClass);
-        
+
         // callback
         _menuClicked(
             jQuery(_settings.target).hasClass(_settings.elmClass) ? 'open' : 'close'
@@ -397,12 +400,24 @@ bulma.menu = function(settings) {
             e.preventDefault();
             thatMenu.menuAction('open');
         });
-        
+
         // closes menu when target areas are clicked
         jQuery(_settings.target).find(_settings.targetHook).unbind().on( triggerEvent + ' touch', function (e) {
             e.preventDefault();
             thatMenu.menuAction('close');
         });
+
+		// resets menu on window resize
+		if ( _settings.resetOnBreakpoint == true ) {
+			window.addEventListener('resize', function(e){
+				e.preventDefault();
+				var device = bulma.device.currentBreakpoint();
+				if ( !_settings.toggleBreakpoints.includes(device) ) {
+					jQuery(_settings.menuHook).css('display', '').removeClass(_settings.elmClass);
+					return false;
+				}
+			});
+		}
     }
 
     // calls callback function after animation
@@ -414,7 +429,7 @@ bulma.menu = function(settings) {
         } else if ( callbackType == 'close' && typeof _settings.menuClose === 'function' ) {
             _settings.menuClose.call( thatMenu );
         }
-        
+
     }
 
     // calls callback function on trigger click event
@@ -426,7 +441,7 @@ bulma.menu = function(settings) {
         } else if ( callbackType == 'close' && typeof _settings.menuClickClose === 'function' ) {
             _settings.menuClickClose.call( thatMenu );
         }
-        
+
     }
 
     // function to set the trigger
@@ -481,7 +496,9 @@ bulma.submenu = function(settings) {
         elmClass  : 'submenu-active',
         bindOn    : 'click',
         toggleAll : false, // close all other menus on click
-        
+		resetOnBreakpoint : true, // resets menu when user device size is not in toggleBreakpoints array
+        toggleBreakpoints : ['mobile', 'tablet'], // toggle submenus only on these breakpoints
+
         // trigger dependant class name
         targetHook  : '.has-dropdown',
         triggerHook : '.navbar-dropdown',
@@ -490,7 +507,6 @@ bulma.submenu = function(settings) {
     };
     // merge default and custom settings into one object
     var _settings = Object.assign({}, _settings, object);
-    
 
     // set modal target
     _settings.target = jQuery(_settings.trigger).find(_settings.triggerHook);
@@ -511,12 +527,19 @@ bulma.submenu = function(settings) {
     // submenu open function
     this.submenuAction = function(callback) {
 
-        // if enabled, close all other dropdowns
+        var device = bulma.device.currentBreakpoint();
+        if ( !_settings.toggleBreakpoints.includes(device) ) {
+            // remove style after animation
+            //$(_settings.targetHook).trigger('reset');
+            jQuery(_settings.triggerHook).css('display', '');
+            return false;
+        }
+
+        // if toggleAll set to true, close all other dropdowns on click
         if (_settings.toggleAll == true) {
             jQuery(_settings.triggerParent).find(_settings.triggerHook).slideUp();
         }
-        
-        
+
         // toggle menu
         jQuery(_settings.target).stop(true, true).slideToggle(function(){
             // callback
@@ -524,7 +547,7 @@ bulma.submenu = function(settings) {
                 jQuery(_settings.target).hasClass(_settings.elmClass) ? 'open' : 'close'
             );
         }).toggleClass(_settings.elmClass);
-        
+
         // callback
         _submenuClicked(
             jQuery(_settings.target).hasClass(_settings.elmClass) ? 'open' : 'close'
@@ -541,12 +564,25 @@ bulma.submenu = function(settings) {
             e.preventDefault();
             thatSubMenu.submenuAction('open');
         });
-        
+
         // closes menu when target areas are clicked
         jQuery(_settings.target).find(_settings.targetHook).unbind().on( triggerEvent + ' touch', function (e) {
             e.preventDefault();
             thatSubMenu.submenuAction('close');
         });
+
+		// resets menu on window resize
+		if ( _settings.resetOnBreakpoint == true ) {
+			window.addEventListener('resize', function(e){
+				e.preventDefault();
+				var device = bulma.device.currentBreakpoint();
+				if ( !_settings.toggleBreakpoints.includes(device) ) {
+					jQuery(_settings.triggerHook).css('display', '');
+					return false;
+				}
+			});
+		}
+
     }
 
     // calls callback function after animation
@@ -558,7 +594,7 @@ bulma.submenu = function(settings) {
         } else if ( callbackType == 'close' && typeof _settings.submenuClose === 'function' ) {
             _settings.submenuClose.call( thatSubMenu );
         }
-        
+
     }
 
     // calls callback function on trigger click event
@@ -570,7 +606,7 @@ bulma.submenu = function(settings) {
         } else if ( callbackType == 'close' && typeof _settings.submenuClickClose === 'function' ) {
             _settings.submenuClickClose.call( thatSubMenu );
         }
-        
+
     }
 
     // function to set the trigger
@@ -752,7 +788,7 @@ $(window).on('load resize',function() {
             case ('tablet'):
                 break;
             case ('desktop'):
-                break;   
+                break;
             default:
                 break;
         };
@@ -796,17 +832,17 @@ $(document).ready(function() {
         });
     });
 
-    
+
     $('.navbar-burger').each( function () {
         new bulma.menu({
             trigger : $(this),
             target : $(this).data('target'),
         });
-    });    
+    });
 
     $('.has-dropdown').each( function () {
         new bulma.submenu({
             trigger : $(this),
         });
-    }); 
+    });
 }); // END document ready
