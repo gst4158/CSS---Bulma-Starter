@@ -9915,3 +9915,6 @@ label, input, textarea, select, textarea {
 
 .display-block {
   display: block !important; }
+
+.pre {
+  overflow: auto; }
