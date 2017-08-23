@@ -77,6 +77,53 @@ bulma.siteInfo = (function () {
 }());
 
 /**
+* Functions used multiple times throughout this lib - used to shorten amount of duplicate code
+*/
+bulma.functions = (function () {
+    // Sets a list of public functions
+    siteFunctions = {};
+
+    // returns dom element from attribute
+    siteFunctions.setTargetFromHref = function(target, trigger, attribute) {
+        if ( !target ) {
+            // check for attribute
+            if ( trigger.attr(attribute) ) {
+                var triggerHref = trigger.attr(attribute);
+                return triggerHref;
+            }
+        } else {
+            return target;
+        }
+    }
+
+    // Calls callback function
+    // Callback Names:
+    // initStart : function() {
+    //     console.log('menu init open');
+    // },
+    // initEnd : function() {
+    //     console.log('menu init close');
+    // },
+    // initStartFinished : function() {
+    //     console.log('menu finished opening');
+    // },
+    // initEndFinished : function() {
+    //     console.log('menu finished closing');
+    // }
+    siteFunctions.fireCallbacks = function(callbackType, srcObj, functionOpen, functionClose) {
+        if ( callbackType == 'open' && typeof functionOpen === 'function' ) {
+            return functionOpen.call( srcObj );
+        } else if ( callbackType == 'close' && typeof functionClose === 'function' ) {
+            return functionClose.call( srcObj );
+        }
+    }
+
+  // return public method
+  return siteFunctions;
+
+}());
+
+/**
 * Retrives device information for current user
 * bulma.device.currentBreakpoint() - returns user device by browser size (desktop/tablet/mobile)
 * bulma.device.breakpointStyleMap() - returns an object of CSS breakpoints mimicing what would be called in the CSS
@@ -157,19 +204,6 @@ bulma.device = (function () {
     $('.modal-button').each( function () {
         new bulma.modal({
             trigger : $(this),
-            target : $(this).attr('href'),
-            modalClickOpen : function() {
-                console.log('modal init open');
-            },
-            modalClickClose : function() {
-                console.log('modal init close');
-            }
-            modalOpen : function() {
-                console.log('modal finished opening');
-            },
-            modalClose : function() {
-                console.log('modal finished closing');
-            }
         });
     });
 
@@ -197,7 +231,7 @@ bulma.modal = function(settings) {
     var _settings = Object.assign({}, _settings, object);
 
     // set modal target
-    _settings.target = jQuery( _setTargetFromHref() );
+    _settings.target = $( bulma.functions.setTargetFromHref(_settings.target, _settings.trigger, 'href') );
 
     // attempts to set target from the trigger href
     function _setTargetFromHref() {
@@ -232,15 +266,21 @@ bulma.modal = function(settings) {
 
         // toggle modal
         jQuery(_settings.target).stop(true, true).fadeToggle(function(){
-            // callback
-            _modalComplete(
-                jQuery(_settings.target).hasClass(_settings.elmClass) ? 'open' : 'close'
+            // callback after animation completes
+            bulma.functions.fireCallbacks(
+                jQuery(_settings.target).hasClass(_settings.elmClass) ? 'open' : 'close',
+                thatModal,
+                _settings.initStartFinished,
+                _settings.initEndFinished
             );
         }).toggleClass(_settings.elmClass);
 
-        // callback
-        _modalClicked(
-            jQuery(_settings.target).hasClass(_settings.elmClass) ? 'open' : 'close'
+        // callback on animation init
+        bulma.functions.fireCallbacks(
+            jQuery(_settings.target).hasClass(_settings.elmClass) ? 'open' : 'close',
+            thatModal,
+            _settings.initStart,
+            _settings.initEnd
         );
 
         // reset body css so no jumping takes place
@@ -272,29 +312,6 @@ bulma.modal = function(settings) {
         });
     }
 
-    // calls callback function
-    function _modalComplete(callbackType) {
-
-        // if a callback was supplied, fire it now
-        if ( callbackType == 'open' && typeof _settings.modalOpen === 'function' ) {
-            _settings.modalOpen.call( thatModal );
-        } else if ( callbackType == 'close' && typeof _settings.modalClose === 'function' ) {
-            _settings.modalClose.call( thatModal );
-        }
-    }
-
-    // calls callback function on trigger click event
-    function _modalClicked(callbackType) {
-
-        // if a callback was supplied, fire it now
-        if ( callbackType == 'open' && typeof _settings.modalClickOpen === 'function' ) {
-            _settings.modalClickOpen.call( thatModal );
-        } else if ( callbackType == 'close' && typeof _settings.modalClickClose === 'function' ) {
-            _settings.modalClickClose.call( thatMenu );
-        }
-
-    }
-
     // function to set the trigger
     this.setTrigger = function ( newTrigger ) {
         _bindTriggerOpenEvent();
@@ -317,19 +334,6 @@ bulma.modal = function(settings) {
     $('.navbar-burger').each( function () {
         new bulma.menu({
             trigger : $(this),
-            target : $(this).attr('href'),
-            menuClickOpen : function() {
-                console.log('menu init open');
-            },
-            menuClickClose : function() {
-                console.log('menu init close');
-            }
-            menuOpen : function() {
-                console.log('menu finished opening');
-            },
-            menuClose : function() {
-                console.log('menu finished closing');
-            }
         });
     });
 
@@ -356,37 +360,29 @@ bulma.menu = function(settings) {
     // merge default and custom settings into one object
     var _settings = Object.assign({}, _settings, object);
 
-
     // set modal target
-    _settings.target = jQuery( '#'+_setTargetFromData() );
-
-    // attempts to set target from the trigger href
-    function _setTargetFromData() {
-        if ( !_settings.target ) {
-            // check for menu target from data attr
-            if ( _settings.trigger && _settings.trigger.hasClass( _settings.targetHook ) && _settings.trigger.data( 'target' ) ) {
-                var triggerHref = _settings.trigger.data( 'target' );
-                return triggerHref;
-            }
-        } else {
-            return _settings.target;
-        }
-    }
+    _settings.target = $( '#' + bulma.functions.setTargetFromHref(_settings.target, _settings.trigger, 'data-target') );
 
     // menu open function
     this.menuAction = function(callback) {
 
-        // toggle menu
+        // toggle modal
         jQuery(_settings.target).stop(true, true).slideToggle(function(){
-            // callback
-            _menuComplete(
-                jQuery(_settings.target).hasClass(_settings.elmClass) ? 'open' : 'close'
+            // callback after animation completes
+            bulma.functions.fireCallbacks(
+                jQuery(_settings.target).hasClass(_settings.elmClass) ? 'open' : 'close',
+                thatMenu,
+                _settings.initStartFinished,
+                _settings.initEndFinished
             );
         }).toggleClass(_settings.elmClass);
 
-        // callback
-        _menuClicked(
-            jQuery(_settings.target).hasClass(_settings.elmClass) ? 'open' : 'close'
+        // callback on animation init
+        bulma.functions.fireCallbacks(
+            jQuery(_settings.target).hasClass(_settings.elmClass) ? 'open' : 'close',
+            thatMenu,
+            _settings.initStart,
+            _settings.initEnd
         );
     }
 
@@ -420,30 +416,6 @@ bulma.menu = function(settings) {
 		}
     }
 
-    // calls callback function after animation
-    function _menuComplete(callbackType) {
-
-        // if a callback was supplied, fire it now
-        if ( callbackType == 'open' && typeof _settings.menuOpen === 'function' ) {
-            _settings.menuOpen.call( thatMenu );
-        } else if ( callbackType == 'close' && typeof _settings.menuClose === 'function' ) {
-            _settings.menuClose.call( thatMenu );
-        }
-
-    }
-
-    // calls callback function on trigger click event
-    function _menuClicked(callbackType) {
-
-        // if a callback was supplied, fire it now
-        if ( callbackType == 'open' && typeof _settings.menuClickOpen === 'function' ) {
-            _settings.menuClickOpen.call( thatMenu );
-        } else if ( callbackType == 'close' && typeof _settings.menuClickClose === 'function' ) {
-            _settings.menuClickClose.call( thatMenu );
-        }
-
-    }
-
     // function to set the trigger
     this.setTrigger = function ( newTrigger ) {
         _bindTriggerOpenEvent();
@@ -468,19 +440,6 @@ bulma.menu = function(settings) {
         new bulma.menu({
             trigger : $(this),
             toggleAll : true // close all other menus on click
-            target : $(this).attr('href'),
-            submenuClickOpen : function() {
-                console.log('menu init open');
-            },
-            submenuClickClose : function() {
-                console.log('menu init close');
-            }
-            submenuOpen : function() {
-                console.log('menu finished opening');
-            },
-            submenuClose : function() {
-                console.log('menu finished closing');
-            }
         });
     });
 */
@@ -508,29 +467,14 @@ bulma.submenu = function(settings) {
     // merge default and custom settings into one object
     var _settings = Object.assign({}, _settings, object);
 
-    // set modal target
+    // set subnav target
     _settings.target = jQuery(_settings.trigger).find(_settings.triggerHook);
-
-    // attempts to set target from the trigger href
-    function _setTargetFromData() {
-        if ( !_settings.target ) {
-            // check for submenu target from data attr
-            if ( _settings.trigger && _settings.trigger.hasClass( _settings.targetHook ) ) {
-                var triggerHref = _settings.trigger.find(triggerHook);
-                return triggerHref;
-            }
-        } else {
-            return _settings.target;
-        }
-    }
 
     // submenu open function
     this.submenuAction = function(callback) {
 
         var device = bulma.device.currentBreakpoint();
         if ( !_settings.toggleBreakpoints.includes(device) ) {
-            // remove style after animation
-            //$(_settings.targetHook).trigger('reset');
             jQuery(_settings.triggerHook).css('display', '');
             return false;
         }
@@ -540,17 +484,23 @@ bulma.submenu = function(settings) {
             jQuery(_settings.triggerParent).find(_settings.triggerHook).slideUp();
         }
 
-        // toggle menu
+        // toggle modal
         jQuery(_settings.target).stop(true, true).slideToggle(function(){
-            // callback
-            _submenuComplete(
-                jQuery(_settings.target).hasClass(_settings.elmClass) ? 'open' : 'close'
+            // callback after animation completes
+            bulma.functions.fireCallbacks(
+                jQuery(_settings.target).hasClass(_settings.elmClass) ? 'open' : 'close',
+                thatSubMenu,
+                _settings.initStartFinished,
+                _settings.initEndFinished
             );
         }).toggleClass(_settings.elmClass);
 
-        // callback
-        _submenuClicked(
-            jQuery(_settings.target).hasClass(_settings.elmClass) ? 'open' : 'close'
+        // callback on animation init
+        bulma.functions.fireCallbacks(
+            jQuery(_settings.target).hasClass(_settings.elmClass) ? 'open' : 'close',
+            thatSubMenu,
+            _settings.initStart,
+            _settings.initEnd
         );
     }
 
@@ -561,13 +511,11 @@ bulma.submenu = function(settings) {
 
         // opens submenu when trigger is clicked
         jQuery(_settings.trigger).unbind().on( triggerEvent + ' touch', function (e) {
-            e.preventDefault();
             thatSubMenu.submenuAction('open');
         });
 
         // closes menu when target areas are clicked
         jQuery(_settings.target).find(_settings.targetHook).unbind().on( triggerEvent + ' touch', function (e) {
-            e.preventDefault();
             thatSubMenu.submenuAction('close');
         });
 
@@ -582,30 +530,6 @@ bulma.submenu = function(settings) {
 				}
 			});
 		}
-
-    }
-
-    // calls callback function after animation
-    function _submenuComplete(callbackType) {
-
-        // if a callback was supplied, fire it now
-        if ( callbackType == 'open' && typeof _settings.submenuOpen === 'function' ) {
-            _settings.submenuOpen.call( thatSubMenu );
-        } else if ( callbackType == 'close' && typeof _settings.submenuClose === 'function' ) {
-            _settings.submenuClose.call( thatSubMenu );
-        }
-
-    }
-
-    // calls callback function on trigger click event
-    function _submenuClicked(callbackType) {
-
-        // if a callback was supplied, fire it now
-        if ( callbackType == 'open' && typeof _settings.submenuClickOpen === 'function' ) {
-            _settings.submenuClickOpen.call( thatSubMenu );
-        } else if ( callbackType == 'close' && typeof _settings.submenuClickClose === 'function' ) {
-            _settings.submenuClickClose.call( thatSubMenu );
-        }
 
     }
 
@@ -648,7 +572,8 @@ bulma.smoothscroll = function(settings) {
     var _settings = this.settings = settings;
 
     // reform target from element
-    _settings.target = $( _setTargetFromHref() );
+    _settings.target = $( bulma.functions.setTargetFromHref(_settings.target, _settings.trigger, 'href') );
+
 
     // make sure wrapper has the proper css to enable scrolling
     function _formatWrapper() {
@@ -710,18 +635,6 @@ bulma.smoothscroll = function(settings) {
 
         // return scroll a
         return targetPos;
-    }
-
-    // attempts to set target from the trigger href
-    function _setTargetFromHref() {
-        if ( !_settings.target ) {
-            if ( _settings.trigger && _settings.trigger.is( 'a' ) && _settings.trigger.attr( 'href' ).length ) {
-                var triggerHref = _settings.trigger.attr( 'href' );
-                return triggerHref;
-            }
-        } else {
-            return _settings.target;
-        }
     }
 
     // bind event to trigger which invokes a scroll
@@ -836,7 +749,6 @@ $(document).ready(function() {
     $('.navbar-burger').each( function () {
         new bulma.menu({
             trigger : $(this),
-            target : $(this).data('target'),
         });
     });
 
