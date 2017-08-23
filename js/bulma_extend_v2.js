@@ -118,8 +118,11 @@ bulma.functions = (function () {
     }
 
     siteFunctions.bindActions = function(_settings, object) {
+        // set toggle type
+        var toggleType = ( _settings.toggleType == 'fade' ? 'fadeToggle' : 'slideToggle'  );
+
         // toggle action
-        jQuery(_settings.target).stop(true, true).fadeToggle(function(){
+        jQuery(_settings.target).stop(true, true)[toggleType](function(){
             // callback after animation completes
             bulma.functions.fireCallbacks(
                 jQuery(_settings.target).hasClass(_settings.elmClass) ? 'open' : 'close',
@@ -137,8 +140,6 @@ bulma.functions = (function () {
             _settings.initEnd
         );
     }
-
-
 
   // return public method
   return siteFunctions;
@@ -217,18 +218,63 @@ bulma.device = (function () {
 
 //--------------------------------------------//
 /**
+* Menu Toggles Options
+* Bind events to toggle menu elements
+* Will attempt to use data-target attribute; but you can add custom triggers and targets as well
+* Contains 4 available callbacks. 2 on open and 2 close events
+*/
+bulma.menu = function(settings) {
+    // kill function if no trigger set
+    if ( !settings.trigger ) return false;
+
+    // get default settings
+    var thatMenu = this;
+    var object = this.settings = settings;
+    var _settings = {
+        trigger   : settings.trigger,
+        elmClass  : 'menu-active',
+        bindOn    : 'click',
+        toggleType : 'slide',
+    };
+
+    // merge default and custom settings into one object
+    var _settings = Object.assign({}, _settings, object);
+
+    // set modal target
+    _settings.target = jQuery( '#' + bulma.functions.setTargetFromHref(_settings.target, _settings.trigger, 'data-target') );
+    console.log( _settings.target );
+
+    // bind event which triggers modal actions
+    function _bindTriggerOpenEvent(){
+        _settings.bindOn = ( _settings.bindOn === 'hover' ? 'mouseover' : _settings.bindOn );
+        var triggerEvent = ( typeof _settings.bindOn === 'string' && _settings.bindOn.length ) ? _settings.bindOn : 'click';
+
+        // opens modal when trigger is clicked
+        jQuery(_settings.trigger).add('.modal-background, .btn-close, .delete', _settings.target).unbind().on( triggerEvent + ' touch', function (e) {
+
+            // creates toggle actions + callbacks
+            bulma.functions.bindActions(_settings, thatMenu)
+
+        });
+    }
+
+    // function to set the trigger
+    this.setTrigger = function ( newTrigger ) {
+        _bindTriggerOpenEvent();
+        return _settings.trigger;
+    };
+
+    // finalize setup
+    thatMenu.setTrigger( _settings.target );
+
+}; // END modal
+
+//--------------------------------------------//
+/**
 * Modal Options
 * Dynamically create popup modals.
 * Will attempt to use href's target; but you can add custom triggers and targets as well
-* Contains callbacks on open and close events
-* Useage:
-    // init modal items
-    jQuery('.modal-button').each( function () {
-        new bulma.modal({
-            trigger : jQuery(this),
-        });
-    });
-
+* Contains 4 available callbacks. 2 on open and 2 close events
 */
 bulma.modal = function(settings) {
     // kill function if no trigger set
@@ -241,6 +287,7 @@ bulma.modal = function(settings) {
         trigger   : settings.trigger,
         elmClass  : 'modal-active',
         bindOn    : 'click',
+        toggleType : 'fade',
     };
 
     // merge default and custom settings into one object
@@ -290,7 +337,7 @@ bulma.modal = function(settings) {
     // finalize setup
     thatModal.setTrigger( _settings.target );
 
-}; // END modal to
+}; // END modal
 
 //--------------------------------------------//
 /**
@@ -490,6 +537,12 @@ jQuery(document).ready(function() {
     jQuery('.modal-button').each( function () {
         new bulma.modal({
             trigger : jQuery(this),
+        });
+    });
+
+    jQuery('.navbar-burger').each( function () {
+        new bulma.menu({
+            trigger : jQuery(this),
             initStart : function() {
                 console.log('modal init open');
             },
@@ -504,14 +557,7 @@ jQuery(document).ready(function() {
             }
         });
     });
-    //
-    //
-    // jQuery('.navbar-burger').each( function () {
-    //     new bulma.menu({
-    //         trigger : jQuery(this),
-    //     });
-    // });
-    //
+
     // jQuery('.has-dropdown').each( function () {
     //     new bulma.submenu({
     //         trigger : jQuery(this),
