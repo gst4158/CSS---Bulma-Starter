@@ -233,19 +233,6 @@ bulma.modal = function(settings) {
     // set modal target
     _settings.target = $( bulma.functions.setTargetFromHref(_settings.target, _settings.trigger, 'href') );
 
-    // attempts to set target from the trigger href
-    function _setTargetFromHref() {
-        if ( !_settings.target ) {
-            // check for href
-            if ( _settings.trigger && _settings.trigger.is( 'a' ) && _settings.trigger.attr( 'href' ) ) {
-                var triggerHref = _settings.trigger.attr( 'href' );
-                return triggerHref;
-            }
-        } else {
-            return _settings.target;
-        }
-    }
-
     // toggle body styles to prevent window from scrolling
     function setBodyCSS() {
         jQuery('html').css({
