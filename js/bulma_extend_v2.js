@@ -491,10 +491,17 @@ bulma.modal = function(settings) {
 
     // toggle body styles to prevent window from scrolling
     function setBodyCSS() {
+
         jQuery('html').css({
             overflow:   jQuery('.modal').hasClass(_settings.elmTargetClass) == false ? '' : 'hidden',
             width:      jQuery('.modal').hasClass(_settings.elmTargetClass) == false ? '' : '100%',
-        })
+        });
+
+        if ( jQuery('.modal').hasClass(_settings.elmTargetClass) == true ) {
+            jQuery('body').addClass(_settings.elmTargetClass);
+        } else {
+            jQuery('body').removeClass(_settings.elmTargetClass);
+        }
     }
 
     // Fixes safari issues with bootstrap 2.0 modals
