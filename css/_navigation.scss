@@ -6,6 +6,54 @@
         .navbar-dropdown {
             display: none;
         }
+
+        &.is-active {
+            > a {
+                background-color: $menu-item-active-background-color;
+                color: $menu-item-active-color;
+            }
+        }
     }
-    
 }
+
+
+// @include media-query( $breakpoints:('mobile', 'tablet') ) {
+//     .navbar-menu {
+//         max-height: 0;
+//         overflow: hidden;
+//         display: block;
+//         padding: 0;
+//         -webkit-transition: max-height .35s ease-in-out;
+//         transition: max-height .35s ease-in-out;
+//         &.is-active {
+//             max-height: 800px;
+//         }
+//     }
+//
+//
+//     .has-dropdown {
+//         overflow: hidden;
+//
+//         > .navbar-dropdown {
+//             max-height: 0;
+//             overflow: hidden;
+//             display: block;
+//             padding: 0;
+//             -webkit-transition: max-height .35s ease-in-out;
+//             transition: max-height .35s ease-in-out;
+//
+//             .navbar-item {
+//                 padding-top: 0.5rem;
+//                 padding-bottom: 0.5rem;
+//             }
+//         }
+//
+//
+//         &.is-active {
+//             > .navbar-dropdown {
+//                 max-height: 100px;
+//             }
+//         }
+//     }
+//
+// }
