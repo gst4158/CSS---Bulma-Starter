@@ -34,7 +34,7 @@ include_once('_inc/header.php');
             &lt;div class=&quot;column desktop-grid-4 tablet-grid-2 mobile-grid-3&quot;&gt;&lt;span class=&quot;box&quot;&gt;desktop&lt;/span&gt;&lt;/div&gt;
             &lt;div class=&quot;column desktop-grid-4 tablet-grid-2 mobile-grid-3&quot;&gt;&lt;span class=&quot;box&quot;&gt;desktop&lt;/span&gt;&lt;/div&gt;
             &lt;div class=&quot;column desktop-grid-2 tablet-grid-6 mobile-grid-3&quot;&gt;&lt;span class=&quot;box&quot;&gt;tablet&lt;/span&gt;&lt;/div&gt;
-            &lt;div class=&quot;column desktop-grid-2 tablet-grid-2 mobile-grid-3&quot;&gt;&lt;span class=&quot;box&quot;&gt;mobile&lt;/span&gt;&lt;/div&gt;            
+            &lt;div class=&quot;column desktop-grid-2 tablet-grid-2 mobile-grid-3&quot;&gt;&lt;span class=&quot;box&quot;&gt;mobile&lt;/span&gt;&lt;/div&gt;
         &lt;/div&gt;
     &lt;/div&gt;
 &lt;/section&gt;
@@ -53,12 +53,12 @@ include_once('_inc/header.php');
                     <h6><i class="fa fa-flag" aria-hidden="true"></i> One Font, 675 Icons</h6>
                     <p>In a single collection, Font Awesome is a pictographic language of web-related actions.</p>
                 </div>
-                
+
                 <div class="column">
                     <h6><i class="fa fa-ban" aria-hidden="true"></i> No JavaScript Required</h6>
                     <p>Fewer compatibility concerns because Font Awesome doesn't require JavaScript.</p>
                 </div>
-                
+
                 <div class="column">
                     <h6><i class="fa fa-arrows-alt" aria-hidden="true"></i> Infinite Scalability</h6>
                     <p>Scalable vector graphics means every icon looks awesome at any size.</p>
@@ -98,7 +98,7 @@ include_once('_inc/header.php');
     &lt;p&gt;
         &lt;i class=&quot;fa fa-github&quot; aria-hidden=&quot;true&quot;&gt;&lt;/i&gt;
         Example Text
-    &lt;/p&gt;    
+    &lt;/p&gt;
             </pre>
         </div>
     </section>
@@ -153,11 +153,11 @@ include_once('_inc/header.php');
 
             <p><i class="fa fa-clipboard" aria-hidden="true"></i> Modals can contain several sub-sections including a <code>modal-card-head</code>, <code>modal-card-body</code>, and <code>modal-card-foot</code></p>
             <p><i class="fa fa-times-circle" aria-hidden="true"></i> There are several triggers to close a modal, including: <code>.modal-background</code>, <code>.btn-close</code>, <code>.delete</code></p>
-            
+
 
             <h6>Click the button below to display the modal</h6>
             <a class="button is-primary is-large modal-button" href="#modal-ter">Launch modal card</a>
-            
+
         </div>
         <div class="container margin-top-10">
             <pre class="box">
@@ -181,6 +181,76 @@ include_once('_inc/header.php');
     </section>
 </section>
 
+<!-- dropdown example -->
+<section class="section">
+    <div class="container">
+        <h3>Dropdowns</h3>
+        <p>Bulma does not come with any JS by default. This customized framework contains both script and css markup to control modals with JS callback functions and more. Baked in are friendly steps taken to reduce quirks in mobile browsers such as safari.</p>
+        <p>To display a dropdown by default; add the <code>dropdown-active</code> class to the <code>ul</code> element you wish to display.</p>
+        <div class="columns">
+            <div class="column desktop-grid-6">
+                <aside class="menu">
+                    <p class="menu-label">
+                    Administration
+                    </p>
+                    <ul class="menu-list dropdown-list">
+                        <li><a>Team Settings</a></li>
+                        <li>
+                            <a class="has-dropdown">Manage Your Team</a>
+                            <ul class="dropdown-active">
+                                <li><a>Members</a></li>
+                                <li><a>Plugins</a></li>
+                                <li><a>Add a member</a></li>
+                            </ul>
+                        </li>
+                        <li><a>Invitations</a></li>
+                        <li><a>Cloud Storage Environment Settings</a></li>
+                        <li>
+                            <a class="has-dropdown">Authentication</a>
+                            <ul>
+                                <li><a>Members</a></li>
+                                <li><a>Plugins</a></li>
+                                <li><a>Add a member</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </aside>
+            </div>
+            <div class="column desktop-grid-6">
+                <pre class="box">
+&lt;aside class=&quot;menu&quot;&gt;
+    &lt;p class=&quot;menu-label&quot;&gt;
+    Administration
+    &lt;/p&gt;
+    &lt;ul class=&quot;menu-list dropdown-list&quot;&gt;
+        &lt;li&gt;&lt;a&gt;Team Settings&lt;/a&gt;&lt;/li&gt;
+        &lt;li&gt;
+            &lt;a class=&quot;has-dropdown&quot;&gt;Manage Your Team&lt;/a&gt;
+            &lt;ul class=&quot;dropdown-active&quot;&gt;
+                &lt;li&gt;&lt;a&gt;Members&lt;/a&gt;&lt;/li&gt;
+                &lt;li&gt;&lt;a&gt;Plugins&lt;/a&gt;&lt;/li&gt;
+                &lt;li&gt;&lt;a&gt;Add a member&lt;/a&gt;&lt;/li&gt;
+            &lt;/ul&gt;
+        &lt;/li&gt;
+        &lt;li&gt;&lt;a&gt;Invitations&lt;/a&gt;&lt;/li&gt;
+        &lt;li&gt;&lt;a&gt;Cloud Storage Environment Settings&lt;/a&gt;&lt;/li&gt;
+        &lt;li&gt;
+            &lt;a class=&quot;has-dropdown&quot;&gt;Authentication&lt;/a&gt;
+            &lt;ul&gt;
+                &lt;li&gt;&lt;a&gt;Members&lt;/a&gt;&lt;/li&gt;
+                &lt;li&gt;&lt;a&gt;Plugins&lt;/a&gt;&lt;/li&gt;
+                &lt;li&gt;&lt;a&gt;Add a member&lt;/a&gt;&lt;/li&gt;
+            &lt;/ul&gt;
+        &lt;/li&gt;
+    &lt;/ul&gt;
+&lt;/aside&gt;
+                </pre>
+            </div>
+        </div>
+    </div>
+
+</section>
+
 <section class="section">
     <div class="container margin-top-40">
         <a class="button smoothscroll" href="#top">
@@ -189,7 +259,7 @@ include_once('_inc/header.php');
                 <i class="fa fa-chevron-up"></i>
             </span>
         </a>
-    </div>    
+    </div>
 </section>
 
 <!-- page modals -->
@@ -219,7 +289,7 @@ include_once('_inc/header.php');
             </footer>
         </div>
     </div>
-    
+
     <!-- modal two -->
     <div id="modal-ter2" class="modal">
         <div class="modal-background"></div>
