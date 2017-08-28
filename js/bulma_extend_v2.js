@@ -141,6 +141,17 @@ bulma.functions = (function () {
         );
     }
 
+    siteFunctions.resetAll = function(settings) {
+        // if toggleAll set to true, close all other dropdowns on click
+        if (settings.toggleAll == true) {
+            // set toggle type
+            var toggleType = ( settings.toggleType == 'fade' ? 'fadeOut' : 'slideUp'  );
+
+            if ( !jQuery(settings.target).hasClass(settings.elmClass) )
+                jQuery(settings.triggerParent).find(settings.dropdownTarget).removeClass(settings.elmClass)[toggleType]();
+        }
+    }
+
   // return public method
   return siteFunctions;
 
@@ -235,14 +246,23 @@ bulma.menu = function(settings) {
         elmClass  : 'menu-active',
         bindOn    : 'click',
         toggleType : 'slide',
+
+        // submenu/dropdown controls
+        toggleAll : true, // close all other menus on click
+        triggerParent : jQuery(settings.trigger).closest('.navbar-menu'),
+        dropdownWrap : 'has-dropdown',
+        dropdownTarget : '.navbar-dropdown',
     };
 
     // merge default and custom settings into one object
     var _settings = Object.assign({}, _settings, object);
 
     // set modal target
-    _settings.target = jQuery( '#' + bulma.functions.setTargetFromHref(_settings.target, _settings.trigger, 'data-target') );
-
+    if ( jQuery(_settings.trigger).hasClass(_settings.dropdownWrap) ) {
+        _settings.target = jQuery(_settings.dropdownTarget, _settings.trigger);
+    } else {
+        _settings.target = jQuery( '#' + bulma.functions.setTargetFromHref(_settings.target, _settings.trigger, 'data-target') );
+    }
 
     // bind event which triggers modal actions
     function _bindTriggerOpenEvent(){
@@ -251,6 +271,9 @@ bulma.menu = function(settings) {
 
         // opens menu when trigger is clicked
         jQuery(_settings.trigger).unbind().on( triggerEvent + ' touch', function (e) {
+
+            // if toggleAll set to true, close all other dropdowns on click
+            bulma.functions.resetAll(_settings);
 
             // creates toggle actions + callbacks
             bulma.functions.bindActions(_settings, thatMenu)
@@ -290,18 +313,17 @@ bulma.dropdown = function(settings) {
         toggleType : 'slide',
 
         // submenu/dropdown controls
-        toggleAll : false, // close all other menus on click
-        triggerParent : jQuery(settings.trigger).closest('.navbar-menu'),
+        toggleAll : true, // close all other menus on click
+        triggerParent : jQuery(settings.trigger).closest('.dropdown-list'),
         dropdownWrap : 'has-dropdown',
-        dropdownTarget : '.navbar-dropdown',
+        dropdownTarget : 'ul',
     };
 
     // merge default and custom settings into one object
     var _settings = Object.assign({}, _settings, object);
 
     // set modal target
-    _settings.target = _settings.target ? jQuery(_settings.target) : jQuery(_settings.dropdownTarget, _settings.trigger);
-
+    _settings.target = _settings.target ? jQuery(_settings.target) : jQuery(_settings.trigger).siblings(_settings.dropdownTarget);
 
     // bind event which triggers modal actions
     function _bindTriggerOpenEvent(){
@@ -312,9 +334,7 @@ bulma.dropdown = function(settings) {
         jQuery(_settings.trigger).unbind().on( triggerEvent + ' touch', function (e) {
 
             // if toggleAll set to true, close all other dropdowns on click
-            if (_settings.toggleAll == true) {
-                jQuery(_settings.triggerParent).find(_settings.dropdownTarget).slideUp();
-            }
+            bulma.functions.resetAll(_settings);
 
             // creates toggle actions + callbacks
             bulma.functions.bindActions(_settings, thatDropdown)
@@ -332,6 +352,7 @@ bulma.dropdown = function(settings) {
     thatDropdown.setTrigger( _settings.target );
 
 }; // END modal
+
 
 //--------------------------------------------//
 /**
@@ -607,13 +628,25 @@ jQuery(document).ready(function() {
         });
     });
 
-    jQuery('.navbar-burger').each( function () {
+    jQuery('.navbar-burger, .has-dropdown').each( function () {
         new bulma.menu({
             trigger : jQuery(this),
+            initStart : function() {
+                console.log('modal init open');
+            },
+            initEnd : function() {
+                console.log('modal init close');
+            },
+            initStartFinished : function() {
+                console.log('modal finished opening');
+            },
+            initEndFinished : function() {
+                console.log('modal finished closing');
+            }
         });
     });
 
-    jQuery('.has-dropdown').each( function () {
+    jQuery('.dropdown-list .has-dropdown').each( function () {
         new bulma.dropdown({
             trigger : jQuery(this),
         });
