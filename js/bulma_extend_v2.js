@@ -117,27 +117,27 @@ bulma.functions = (function () {
         }
     }
 
-    siteFunctions.bindActions = function(_settings, object) {
+    siteFunctions.bindActions = function(settings, object) {
         // set toggle type
-        var toggleType = ( _settings.toggleType == 'fade' ? 'fadeToggle' : 'slideToggle'  );
+        var toggleType = ( settings.toggleType == 'fade' ? 'fadeToggle' : 'slideToggle'  );
 
         // toggle action
-        jQuery(_settings.target).stop(true, true)[toggleType](function(){
+        jQuery(settings.target).stop(true, true)[toggleType](settings.toggleSpeed, function(){
             // callback after animation completes
             bulma.functions.fireCallbacks(
-                jQuery(_settings.target).hasClass(_settings.elmClass) ? 'open' : 'close',
+                jQuery(settings.target).hasClass(settings.elmClass) ? 'open' : 'close',
                 object,
-                _settings.initStartFinished,
-                _settings.initEndFinished
+                settings.initStartFinished,
+                settings.initEndFinished
             );
-        }).toggleClass(_settings.elmClass);
+        }).toggleClass(settings.elmClass);
 
         // callback on animation init
         bulma.functions.fireCallbacks(
-            jQuery(_settings.target).hasClass(_settings.elmClass) ? 'open' : 'close',
+            jQuery(settings.target).hasClass(settings.elmClass) ? 'open' : 'close',
             object,
-            _settings.initStart,
-            _settings.initEnd
+            settings.initStart,
+            settings.initEnd
         );
     }
 
@@ -148,8 +148,50 @@ bulma.functions = (function () {
             var toggleType = ( settings.toggleType == 'fade' ? 'fadeOut' : 'slideUp'  );
 
             if ( !jQuery(settings.target).hasClass(settings.elmClass) )
-                jQuery(settings.triggerParent).find(settings.dropdownTarget).removeClass(settings.elmClass)[toggleType]();
+                jQuery(settings.triggerParent).find(settings.dropdownTarget).removeClass(settings.elmClass)[toggleType](settings.toggleSpeed);
         }
+    }
+
+    siteFunctions.windowResizeReset = function(settings) {
+        window.addEventListener('resize', function(e){
+            e.preventDefault();
+            var device = bulma.device.currentBreakpoint();
+            if ( !settings.toggleBreakpoints.includes(device) ) {
+                jQuery(settings.triggerParent).add(settings.target).removeClass(settings.elmClass).css('display', '');
+                return false;
+            }
+        });
+    }
+
+    siteFunctions.deviceListen = function() {
+        var old_var = '';
+        jQuery(window).on('load resize',function() {
+
+            // get device setting
+            var bulma_device = bulma.device.currentBreakpoint()
+
+            // only do stuff if bulma_device has changed value
+            if ( bulma_device != old_var ) {
+                // update h1 BG color
+                switch(bulma_device) {
+                    case ('mobile'):
+                        break;
+                    case ('tablet'):
+                        break;
+                    case ('desktop'):
+                        break;
+                    default:
+                        break;
+                };
+
+                // add breakpoint to body class
+                jQuery('body').attr('data-device', bulma.device.currentBreakpoint() );
+
+            }
+            // set previous value to test with
+            old_var = bulma_device;
+
+        });
     }
 
   // return public method
@@ -246,6 +288,7 @@ bulma.menu = function(settings) {
         elmClass  : 'menu-active',
         bindOn    : 'click',
         toggleType : 'slide',
+        toggleSpeed : 400,
 
         // submenu/dropdown controls
         toggleAll : false, // close all other menus on click
@@ -285,14 +328,7 @@ bulma.menu = function(settings) {
 
             // resets menu on window resize
             if ( _settings.resetOnBreakpoint == true ) {
-                window.addEventListener('resize', function(e){
-                    e.preventDefault();
-                    var device = bulma.device.currentBreakpoint();
-                    if ( !_settings.toggleBreakpoints.includes(device) ) {
-                        jQuery(_settings.triggerParent).add(_settings.target).css('display', '');
-                        return false;
-                    }
-                });
+                bulma.functions.windowResizeReset(_settings);
             }
 
         });
@@ -328,12 +364,18 @@ bulma.dropdown = function(settings) {
         elmClass  : 'dropdown-active',
         bindOn    : 'click',
         toggleType : 'slide',
+        toggleSpeed : 400,
 
         // submenu/dropdown controls
         toggleAll : true, // close all other menus on click
+        resetOnBreakpoint : false, // resets menu when user device size is not in toggleBreakpoints array
+        toggleBreakpoints : ['mobile', 'tablet'], // toggle submenus only on these breakpoints
         triggerParent : jQuery(settings.trigger).closest('.dropdown-list'),
         dropdownWrap : 'has-dropdown',
         dropdownTarget : 'ul',
+
+        // trigger default items
+        default : jQuery(settings.elmClass, settings.triggerParent),
     };
 
     // merge default and custom settings into one object
@@ -356,12 +398,27 @@ bulma.dropdown = function(settings) {
             // creates toggle actions + callbacks
             bulma.functions.bindActions(_settings, thatDropdown)
 
+            // resets menu on window resize
+            if ( _settings.resetOnBreakpoint == true ) {
+                bulma.functions.windowResizeReset(_settings);
+            }
+
         });
+    }
+
+    // checks for default triggers
+    function _triggerDefault(){
+        _settings.bindOn = ( _settings.bindOn === 'hover' ? 'mouseover' : _settings.bindOn );
+        var triggerEvent = ( typeof _settings.bindOn === 'string' && _settings.bindOn.length ) ? _settings.bindOn : 'click';
+
+        if ( jQuery(_settings.target).hasClass(_settings.elmClass) )
+             jQuery(_settings.trigger).trigger(triggerEvent);
     }
 
     // function to set the trigger
     this.setTrigger = function ( newTrigger ) {
         _bindTriggerOpenEvent();
+        _triggerDefault();
         return _settings.trigger;
     };
 
@@ -390,6 +447,7 @@ bulma.modal = function(settings) {
         elmClass  : 'modal-active',
         bindOn    : 'click',
         toggleType : 'fade',
+        toggleSpeed : 400,
     };
 
     // merge default and custom settings into one object
@@ -586,34 +644,7 @@ bulma.smoothscroll = function(settings) {
 
 // Window Resize Events
 //--------------------------------------------//
-var old_var = '';
-jQuery(window).on('load resize',function() {
-
-    // get device setting
-    var bulma_device = bulma.device.currentBreakpoint()
-
-    // only do stuff if bulma_device has changed value
-    if ( bulma_device != old_var ) {
-        // update h1 BG color
-        switch(bulma_device) {
-            case ('mobile'):
-                break;
-            case ('tablet'):
-                break;
-            case ('desktop'):
-                break;
-            default:
-                break;
-        };
-
-        // add breakpoint to body class
-        jQuery('body').attr('data-device', bulma.device.currentBreakpoint() );
-
-    }
-    // set previous value to test with
-    old_var = bulma_device;
-
-});
+bulma.functions.deviceListen();
 
 // jQuery
 //--------------------------------------------//
@@ -632,9 +663,6 @@ jQuery(document).ready(function() {
         new bulma.smoothscroll({
             trigger : jQuery(this),
             offset : -10,
-            callback : function() {
-                console.log('callback works');
-            }
         });
     });
 
@@ -648,18 +676,6 @@ jQuery(document).ready(function() {
     jQuery('.navbar-burger, .navbar-menu .has-dropdown').each( function () {
         new bulma.menu({
             trigger : jQuery(this),
-            initStart : function() {
-                console.log('modal init open');
-            },
-            initEnd : function() {
-                console.log('modal init close');
-            },
-            initStartFinished : function() {
-                console.log('modal finished opening');
-            },
-            initEndFinished : function() {
-                console.log('modal finished closing');
-            }
         });
     });
 
