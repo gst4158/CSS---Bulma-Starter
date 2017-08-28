@@ -1,8 +1,8 @@
 <?php
 /*
-Threme Name: Monkeysports Playground
+Threme Name: Bulma Playground
 Threme URI:
-Description: 2017 Monkeysports Playground
+Description: 2017 Bulma Playground
 Version: 1.0
 Author: Gregory Thomason
 Author URI: http://gregory-thomason.com/
