@@ -132,6 +132,8 @@ bulma.functions = (function () {
             );
         }).toggleClass(settings.elmClass);
 
+        jQuery(settings.trigger).toggleClass('is-active');
+
         // callback on animation init
         bulma.functions.fireCallbacks(
             jQuery(settings.target).hasClass(settings.elmClass) ? 'open' : 'close',
@@ -147,8 +149,10 @@ bulma.functions = (function () {
             // set toggle type
             var toggleType = ( settings.toggleType == 'fade' ? 'fadeOut' : 'slideUp'  );
 
-            if ( !jQuery(settings.target).hasClass(settings.elmClass) )
+            if ( !jQuery(settings.target).hasClass(settings.elmClass) ) {
                 jQuery(settings.triggerParent).find(settings.dropdownTarget).removeClass(settings.elmClass)[toggleType](settings.toggleSpeed);
+                jQuery(settings.triggerParent).find('.'+settings.elmClassActive).removeClass(settings.elmClassActive);
+            }
         }
     }
 
@@ -158,6 +162,7 @@ bulma.functions = (function () {
             var device = bulma.device.currentBreakpoint();
             if ( !settings.toggleBreakpoints.includes(device) ) {
                 jQuery(settings.triggerParent).add(settings.target).removeClass(settings.elmClass).css('display', '');
+                jQuery(settings.triggerParent).find('.'+settings.elmClassActive).removeClass(settings.elmClassActive);
                 return false;
             }
         });
@@ -297,6 +302,7 @@ bulma.menu = function(settings) {
     var _settings = {
         trigger   : settings.trigger,
         elmClass  : 'menu-active',
+        elmClassActive : 'is-active',
         bindOn    : 'click',
         toggleType : 'slide',
         toggleSpeed : 400,
@@ -375,6 +381,7 @@ bulma.dropdown = function(settings) {
     var _settings = {
         trigger   : settings.trigger,
         elmClass  : 'dropdown-active',
+        elmClassActive : 'is-active',
         bindOn    : 'click',
         toggleType : 'slide',
         toggleSpeed : 400,
@@ -450,6 +457,7 @@ bulma.modal = function(settings) {
     var _settings = {
         trigger   : settings.trigger,
         elmClass  : 'modal-active',
+        elmClassActive : 'is-active',
         bindOn    : 'click',
         toggleType : 'fade',
         toggleSpeed : 400,
