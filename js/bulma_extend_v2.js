@@ -83,7 +83,9 @@ bulma.functions = (function () {
     // Sets a list of public functions
     siteFunctions = {};
 
-    // returns dom element from attribute
+    /**
+    * returns dom element from attribute
+    */
     siteFunctions.setTargetFromHref = function(target, trigger, attribute) {
         if ( !target ) {
             if ( trigger.attr(attribute) ) {
@@ -95,20 +97,21 @@ bulma.functions = (function () {
         }
     }
 
-    // Calls callback function
-    // Callback Names:
-    // initStart : function() {
-    //     console.log('menu init open');
-    // },
-    // initEnd : function() {
-    //     console.log('menu init close');
-    // },
-    // initStartFinished : function() {
-    //     console.log('menu finished opening');
-    // },
-    // initEndFinished : function() {
-    //     console.log('menu finished closing');
-    // }
+    /* Calls callback function
+    * Callback Names:
+        initStart : function() {
+            console.log('menu init open');
+        },
+        initEnd : function() {
+            console.log('menu init close');
+        },
+        initStartFinished : function() {
+            console.log('menu finished opening');
+        },
+        initEndFinished : function() {
+            console.log('menu finished closing');
+        }
+    */
     siteFunctions.fireCallbacks = function(callbackType, srcObj, functionOpen, functionClose) {
         if ( callbackType == 'open' && typeof functionOpen === 'function' ) {
             return functionOpen.call( srcObj );
@@ -117,6 +120,10 @@ bulma.functions = (function () {
         }
     }
 
+    /**
+    * Basic .bind actions that all modules share
+    * contains 4 callbacks and triggers animation toggles
+    */
     siteFunctions.bindActions = function(settings, object) {
         // set toggle type
         var toggleType = ( settings.toggleType == 'fade' ? 'fadeToggle' : 'slideToggle'  );
@@ -125,59 +132,72 @@ bulma.functions = (function () {
         jQuery(settings.target).stop(true, true)[toggleType](settings.toggleSpeed, function(){
             // callback after animation completes
             bulma.functions.fireCallbacks(
-                jQuery(settings.target).hasClass(settings.elmClass) ? 'open' : 'close',
+                jQuery(settings.target).hasClass(settings.elmTargetClass) ? 'open' : 'close',
                 object,
                 settings.initStartFinished,
                 settings.initEndFinished
             );
-        }).toggleClass(settings.elmClass);
+        }).toggleClass(settings.elmTargetClass);
 
-        jQuery(settings.trigger).toggleClass('is-active');
+        jQuery(settings.trigger).toggleClass(settings.elmTriggerClass);
 
         // callback on animation init
         bulma.functions.fireCallbacks(
-            jQuery(settings.target).hasClass(settings.elmClass) ? 'open' : 'close',
+            jQuery(settings.target).hasClass(settings.elmTargetClass) ? 'open' : 'close',
             object,
             settings.initStart,
             settings.initEnd
         );
     }
 
+    /**
+    * Optional function that resets all toggables on click
+    */
     siteFunctions.resetAll = function(settings) {
         // if toggleAll set to true, close all other dropdowns on click
         if (settings.toggleAll == true) {
             // set toggle type
             var toggleType = ( settings.toggleType == 'fade' ? 'fadeOut' : 'slideUp'  );
 
-            if ( !jQuery(settings.target).hasClass(settings.elmClass) ) {
-                jQuery(settings.triggerParent).find(settings.dropdownTarget).removeClass(settings.elmClass)[toggleType](settings.toggleSpeed);
-                jQuery(settings.triggerParent).find('.'+settings.elmClassActive).removeClass(settings.elmClassActive);
+            if ( !jQuery(settings.target).hasClass(settings.elmTargetClass) ) {
+                jQuery(settings.triggerParent).find(settings.dropdownTarget).removeClass(settings.elmTargetClass)[toggleType](settings.toggleSpeed);
+                jQuery(settings.triggerParent).find('.'+settings.elmTriggerClass).removeClass(settings.elmTriggerClass);
             }
         }
     }
 
+    /**
+    * Window resize listener that skips all animations and reset classes and positions
+    * Looks at an array to determine which device sizes to fire this on
+    */
     siteFunctions.windowResizeReset = function(settings) {
         window.addEventListener('resize', function(e){
             e.preventDefault();
             var device = bulma.device.currentBreakpoint();
             if ( !settings.toggleBreakpoints.includes(device) ) {
-                jQuery(settings.triggerParent).add(settings.target).removeClass(settings.elmClass).css('display', '');
-                jQuery(settings.triggerParent).find('.'+settings.elmClassActive).removeClass(settings.elmClassActive);
+                jQuery(settings.triggerParent).add(settings.target).removeClass(settings.elmTargetClass).css('display', '');
+                jQuery(settings.triggerParent).find('.'+settings.elmTriggerClass).removeClass(settings.elmTriggerClass);
                 return false;
             }
         });
     }
 
+    /**
+    * Triggers click/hover functions on page load if target elements have their active class on page load
+    */
     siteFunctions.triggerDefault = function(settings) {
         settings.bindOn = ( settings.bindOn === 'hover' ? 'mouseover' : settings.bindOn );
         var triggerEvent = ( typeof settings.bindOn === 'string' && settings.bindOn.length ) ? settings.bindOn : 'click';
 
-        if ( jQuery(settings.target).hasClass(settings.elmClass) ) {
+        if ( jQuery(settings.target).hasClass(settings.elmTargetClass) ) {
             jQuery(settings.trigger).trigger(triggerEvent);
-            jQuery(settings.target).addClass(settings.elmClass);
+            jQuery(settings.target).addClass(settings.elmTargetClass);
         }
     }
 
+    /**
+    * Adds data attribute of current breakpoint device to body
+    */
     siteFunctions.deviceListen = function() {
         var old_var = '';
         jQuery(window).on('load resize',function() {
@@ -289,7 +309,7 @@ bulma.device = (function () {
 * Menu Toggles Options
 * Bind events to toggle menu elements
 * Will attempt to use data-target attribute; but you can add custom triggers and targets as well
-* To activate submenus on load; include it's _settings.elmClass to the target element
+* To activate submenus on load; include it's _settings.elmTargetClass to the target element
 * Contains 4 available callbacks. 2 on open and 2 close events
 */
 bulma.menu = function(settings) {
@@ -301,8 +321,8 @@ bulma.menu = function(settings) {
     var object = this.settings = settings;
     var _settings = {
         trigger   : settings.trigger,
-        elmClass  : 'menu-active',
-        elmClassActive : 'is-active',
+        elmTargetClass  : 'menu-active',
+        elmTriggerClass : 'is-active',
         bindOn    : 'click',
         toggleType : 'slide',
         toggleSpeed : 400,
@@ -368,7 +388,7 @@ bulma.menu = function(settings) {
 * Dropdown Toggles Options
 * Bind events to toggle dropdown elements
 * Dropdown menu must be siblings of trigger unless custom target is specified. Dropdown wrapper defaults to 'ul'
-* To activate dropdowns on load; include it's _settings.elmClass to the target element
+* To activate dropdowns on load; include it's _settings.elmTargetClass to the target element
 * Contains 4 available callbacks. 2 on open and 2 close events
 */
 bulma.dropdown = function(settings) {
@@ -380,8 +400,8 @@ bulma.dropdown = function(settings) {
     var object = this.settings = settings;
     var _settings = {
         trigger   : settings.trigger,
-        elmClass  : 'dropdown-active',
-        elmClassActive : 'is-active',
+        elmTargetClass  : 'dropdown-active',
+        elmTriggerClass : 'is-active',
         bindOn    : 'click',
         toggleType : 'slide',
         toggleSpeed : 400,
@@ -395,7 +415,7 @@ bulma.dropdown = function(settings) {
         dropdownTarget : 'ul',
 
         // trigger default items
-        default : jQuery(settings.elmClass, settings.triggerParent),
+        default : jQuery(settings.elmTargetClass, settings.triggerParent),
     };
 
     // merge default and custom settings into one object
@@ -444,7 +464,7 @@ bulma.dropdown = function(settings) {
 * Modal Options
 * Dynamically create popup modals.
 * Will attempt to use href's target; but you can add custom triggers and targets as well
-* To activate modal on load; include it's _settings.elmClass to the target modal
+* To activate modal on load; include it's _settings.elmTargetClass to the target modal
 * Contains 4 available callbacks. 2 on open and 2 close events
 */
 bulma.modal = function(settings) {
@@ -456,8 +476,8 @@ bulma.modal = function(settings) {
     var object = this.settings = settings;
     var _settings = {
         trigger   : settings.trigger,
-        elmClass  : 'modal-active',
-        elmClassActive : 'is-active',
+        elmTargetClass  : 'modal-active',
+        elmTriggerClass : 'is-active',
         bindOn    : 'click',
         toggleType : 'fade',
         toggleSpeed : 400,
@@ -472,8 +492,8 @@ bulma.modal = function(settings) {
     // toggle body styles to prevent window from scrolling
     function setBodyCSS() {
         jQuery('html').css({
-            overflow:   jQuery('.modal').hasClass(_settings.elmClass) == false ? '' : 'hidden',
-            width:      jQuery('.modal').hasClass(_settings.elmClass) == false ? '' : '100%',
+            overflow:   jQuery('.modal').hasClass(_settings.elmTargetClass) == false ? '' : 'hidden',
+            width:      jQuery('.modal').hasClass(_settings.elmTargetClass) == false ? '' : '100%',
         })
     }
 
