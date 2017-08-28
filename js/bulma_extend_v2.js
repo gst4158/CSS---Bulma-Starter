@@ -248,7 +248,9 @@ bulma.menu = function(settings) {
         toggleType : 'slide',
 
         // submenu/dropdown controls
-        toggleAll : true, // close all other menus on click
+        toggleAll : false, // close all other menus on click
+        resetOnBreakpoint : true, // resets menu when user device size is not in toggleBreakpoints array
+        toggleBreakpoints : ['mobile', 'tablet'], // toggle submenus only on these breakpoints
         triggerParent : jQuery(settings.trigger).closest('.navbar-menu'),
         dropdownWrap : 'has-dropdown',
         dropdownTarget : '.navbar-dropdown',
@@ -257,7 +259,7 @@ bulma.menu = function(settings) {
     // merge default and custom settings into one object
     var _settings = Object.assign({}, _settings, object);
 
-    // set modal target
+    // set target
     if ( jQuery(_settings.trigger).hasClass(_settings.dropdownWrap) ) {
         _settings.target = jQuery(_settings.dropdownTarget, _settings.trigger);
     } else {
@@ -271,12 +273,27 @@ bulma.menu = function(settings) {
 
         // opens menu when trigger is clicked
         jQuery(_settings.trigger).unbind().on( triggerEvent + ' touch', function (e) {
+            var device = bulma.device.currentBreakpoint();
+            if ( _settings.resetOnBreakpoint == true && _settings.toggleBreakpoints.includes(device) ) {
 
-            // if toggleAll set to true, close all other dropdowns on click
-            bulma.functions.resetAll(_settings);
+                // if toggleAll set to true, close all on click
+                bulma.functions.resetAll(_settings);
 
-            // creates toggle actions + callbacks
-            bulma.functions.bindActions(_settings, thatMenu)
+                // creates toggle actions + callbacks
+                bulma.functions.bindActions(_settings, thatMenu)
+            }
+
+            // resets menu on window resize
+            if ( _settings.resetOnBreakpoint == true ) {
+                window.addEventListener('resize', function(e){
+                    e.preventDefault();
+                    var device = bulma.device.currentBreakpoint();
+                    if ( !_settings.toggleBreakpoints.includes(device) ) {
+                        jQuery(_settings.triggerParent).add(_settings.target).css('display', '');
+                        return false;
+                    }
+                });
+            }
 
         });
     }
@@ -294,9 +311,9 @@ bulma.menu = function(settings) {
 
 //--------------------------------------------//
 /**
-* Menu Toggles Options
-* Bind events to toggle menu elements
-* Will attempt to use data-target attribute; but you can add custom triggers and targets as well
+* Dropdown Toggles Options
+* Bind events to toggle dropdown elements
+* Dropdown menu must be siblings of trigger unless custom target is specified. Dropdown wrapper defaults to 'ul'
 * Contains 4 available callbacks. 2 on open and 2 close events
 */
 bulma.dropdown = function(settings) {
@@ -628,7 +645,7 @@ jQuery(document).ready(function() {
         });
     });
 
-    jQuery('.navbar-burger, .has-dropdown').each( function () {
+    jQuery('.navbar-burger, .navbar-menu .has-dropdown').each( function () {
         new bulma.menu({
             trigger : jQuery(this),
             initStart : function() {
