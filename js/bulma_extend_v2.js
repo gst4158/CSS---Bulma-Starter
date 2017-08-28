@@ -242,15 +242,15 @@ bulma.menu = function(settings) {
 
     // set modal target
     _settings.target = jQuery( '#' + bulma.functions.setTargetFromHref(_settings.target, _settings.trigger, 'data-target') );
-    console.log( _settings.target );
+
 
     // bind event which triggers modal actions
     function _bindTriggerOpenEvent(){
         _settings.bindOn = ( _settings.bindOn === 'hover' ? 'mouseover' : _settings.bindOn );
         var triggerEvent = ( typeof _settings.bindOn === 'string' && _settings.bindOn.length ) ? _settings.bindOn : 'click';
 
-        // opens modal when trigger is clicked
-        jQuery(_settings.trigger).add('.modal-background, .btn-close, .delete', _settings.target).unbind().on( triggerEvent + ' touch', function (e) {
+        // opens menu when trigger is clicked
+        jQuery(_settings.trigger).unbind().on( triggerEvent + ' touch', function (e) {
 
             // creates toggle actions + callbacks
             bulma.functions.bindActions(_settings, thatMenu)
@@ -266,6 +266,70 @@ bulma.menu = function(settings) {
 
     // finalize setup
     thatMenu.setTrigger( _settings.target );
+
+}; // END modal
+
+//--------------------------------------------//
+/**
+* Menu Toggles Options
+* Bind events to toggle menu elements
+* Will attempt to use data-target attribute; but you can add custom triggers and targets as well
+* Contains 4 available callbacks. 2 on open and 2 close events
+*/
+bulma.dropdown = function(settings) {
+    // kill function if no trigger set
+    if ( !settings.trigger ) return false;
+
+    // get default settings
+    var thatDropdown = this;
+    var object = this.settings = settings;
+    var _settings = {
+        trigger   : settings.trigger,
+        elmClass  : 'dropdown-active',
+        bindOn    : 'click',
+        toggleType : 'slide',
+
+        // submenu/dropdown controls
+        toggleAll : false, // close all other menus on click
+        triggerParent : jQuery(settings.trigger).closest('.navbar-menu'),
+        dropdownWrap : 'has-dropdown',
+        dropdownTarget : '.navbar-dropdown',
+    };
+
+    // merge default and custom settings into one object
+    var _settings = Object.assign({}, _settings, object);
+
+    // set modal target
+    _settings.target = _settings.target ? jQuery(_settings.target) : jQuery(_settings.dropdownTarget, _settings.trigger);
+
+
+    // bind event which triggers modal actions
+    function _bindTriggerOpenEvent(){
+        _settings.bindOn = ( _settings.bindOn === 'hover' ? 'mouseover' : _settings.bindOn );
+        var triggerEvent = ( typeof _settings.bindOn === 'string' && _settings.bindOn.length ) ? _settings.bindOn : 'click';
+
+        // opens menu when trigger is clicked
+        jQuery(_settings.trigger).unbind().on( triggerEvent + ' touch', function (e) {
+
+            // if toggleAll set to true, close all other dropdowns on click
+            if (_settings.toggleAll == true) {
+                jQuery(_settings.triggerParent).find(_settings.dropdownTarget).slideUp();
+            }
+
+            // creates toggle actions + callbacks
+            bulma.functions.bindActions(_settings, thatDropdown)
+
+        });
+    }
+
+    // function to set the trigger
+    this.setTrigger = function ( newTrigger ) {
+        _bindTriggerOpenEvent();
+        return _settings.trigger;
+    };
+
+    // finalize setup
+    thatDropdown.setTrigger( _settings.target );
 
 }; // END modal
 
@@ -299,8 +363,8 @@ bulma.modal = function(settings) {
     // toggle body styles to prevent window from scrolling
     function setBodyCSS() {
         jQuery('html').css({
-            overflow:   jQuery(_settings.targetHook).hasClass(_settings.elmClass) == false ? '' : 'hidden',
-            width:      jQuery(_settings.targetHook).hasClass(_settings.elmClass) == false ? '' : '100%',
+            overflow:   jQuery('.modal').hasClass(_settings.elmClass) == false ? '' : 'hidden',
+            width:      jQuery('.modal').hasClass(_settings.elmClass) == false ? '' : '100%',
         })
     }
 
@@ -321,7 +385,10 @@ bulma.modal = function(settings) {
             e.preventDefault();
 
             // creates toggle actions + callbacks
-            bulma.functions.bindActions(_settings, thatModal)
+            bulma.functions.bindActions(_settings, thatModal);
+
+            // reset body css so no jumping takes place
+            setBodyCSS();
 
             // fix scrolling in safari
             jQuery(_settings.target)[0].addEventListener('webkitAnimationEnd', fixSafariScrolling);
@@ -543,24 +610,13 @@ jQuery(document).ready(function() {
     jQuery('.navbar-burger').each( function () {
         new bulma.menu({
             trigger : jQuery(this),
-            initStart : function() {
-                console.log('modal init open');
-            },
-            initEnd : function() {
-                console.log('modal init close');
-            },
-            initStartFinished : function() {
-                console.log('modal finished opening');
-            },
-            initEndFinished : function() {
-                console.log('modal finished closing');
-            }
         });
     });
 
-    // jQuery('.has-dropdown').each( function () {
-    //     new bulma.submenu({
-    //         trigger : jQuery(this),
-    //     });
-    // });
+    jQuery('.has-dropdown').each( function () {
+        new bulma.dropdown({
+            trigger : jQuery(this),
+        });
+    });
+
 }); // END document ready
