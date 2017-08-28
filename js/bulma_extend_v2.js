@@ -163,6 +163,16 @@ bulma.functions = (function () {
         });
     }
 
+    siteFunctions.triggerDefault = function(settings) {
+        settings.bindOn = ( settings.bindOn === 'hover' ? 'mouseover' : settings.bindOn );
+        var triggerEvent = ( typeof settings.bindOn === 'string' && settings.bindOn.length ) ? settings.bindOn : 'click';
+
+        if ( jQuery(settings.target).hasClass(settings.elmClass) ) {
+            jQuery(settings.trigger).trigger(triggerEvent);
+            jQuery(settings.target).addClass(settings.elmClass);
+        }
+    }
+
     siteFunctions.deviceListen = function() {
         var old_var = '';
         jQuery(window).on('load resize',function() {
@@ -274,6 +284,7 @@ bulma.device = (function () {
 * Menu Toggles Options
 * Bind events to toggle menu elements
 * Will attempt to use data-target attribute; but you can add custom triggers and targets as well
+* To activate submenus on load; include it's _settings.elmClass to the target element
 * Contains 4 available callbacks. 2 on open and 2 close events
 */
 bulma.menu = function(settings) {
@@ -337,6 +348,7 @@ bulma.menu = function(settings) {
     // function to set the trigger
     this.setTrigger = function ( newTrigger ) {
         _bindTriggerOpenEvent();
+        bulma.functions.triggerDefault(_settings);
         return _settings.trigger;
     };
 
@@ -350,6 +362,7 @@ bulma.menu = function(settings) {
 * Dropdown Toggles Options
 * Bind events to toggle dropdown elements
 * Dropdown menu must be siblings of trigger unless custom target is specified. Dropdown wrapper defaults to 'ul'
+* To activate dropdowns on load; include it's _settings.elmClass to the target element
 * Contains 4 available callbacks. 2 on open and 2 close events
 */
 bulma.dropdown = function(settings) {
@@ -406,19 +419,10 @@ bulma.dropdown = function(settings) {
         });
     }
 
-    // checks for default triggers
-    function _triggerDefault(){
-        _settings.bindOn = ( _settings.bindOn === 'hover' ? 'mouseover' : _settings.bindOn );
-        var triggerEvent = ( typeof _settings.bindOn === 'string' && _settings.bindOn.length ) ? _settings.bindOn : 'click';
-
-        if ( jQuery(_settings.target).hasClass(_settings.elmClass) )
-             jQuery(_settings.trigger).trigger(triggerEvent);
-    }
-
     // function to set the trigger
     this.setTrigger = function ( newTrigger ) {
         _bindTriggerOpenEvent();
-        _triggerDefault();
+        bulma.functions.triggerDefault(_settings);
         return _settings.trigger;
     };
 
@@ -433,6 +437,7 @@ bulma.dropdown = function(settings) {
 * Modal Options
 * Dynamically create popup modals.
 * Will attempt to use href's target; but you can add custom triggers and targets as well
+* To activate modal on load; include it's _settings.elmClass to the target modal
 * Contains 4 available callbacks. 2 on open and 2 close events
 */
 bulma.modal = function(settings) {
@@ -494,6 +499,7 @@ bulma.modal = function(settings) {
     // function to set the trigger
     this.setTrigger = function ( newTrigger ) {
         _bindTriggerOpenEvent();
+        bulma.functions.triggerDefault(_settings);
         return _settings.trigger;
     };
 
