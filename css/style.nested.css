@@ -8277,6 +8277,11 @@ html[xmlns] .flexslider .slides {
     opacity: 1;
     right: 10px; } }
 
+.dropdown-list li ul {
+  display: none; }
+  .dropdown-list li ul.active-dropdown {
+    display: block; }
+
 .modal {
   right: auto;
   left: 0;
@@ -8325,11 +8330,17 @@ html[xmlns] .flexslider .slides {
 
 @media screen and (max-width: 767px) {
   .has-dropdown .navbar-dropdown {
-    display: none; } }
+    display: none; }
+  .has-dropdown.is-active > a {
+    background-color: #00d1b2;
+    color: #fff; } }
 
 @media screen and (min-width: 768px) and (max-width: 1199px) {
   .has-dropdown .navbar-dropdown {
-    display: none; } }
+    display: none; }
+  .has-dropdown.is-active > a {
+    background-color: #00d1b2;
+    color: #fff; } }
 
 h1 {
   font-size: 3rem; }
@@ -9916,5 +9927,5 @@ label, input, textarea, select, textarea {
 .display-block {
   display: block !important; }
 
-.pre {
+.pre, pre {
   overflow: auto; }
