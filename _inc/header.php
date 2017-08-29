@@ -4,7 +4,7 @@
 <html lang="en-US" class="no-js">
 <head>
 	<meta charset="UTF-8">
-	<title>Monkeysports Bulma</title>
+	<title>Bulma Playground</title>
 
 	<link href="//www.google-analytics.com" rel="dns-prefetch">
     <link href="favicon.ico" rel="shortcut icon">
@@ -26,7 +26,7 @@
 	<script src="js/flexslider/jquery.flexslider.js" type="text/javascript"></script>
 
 	<!-- site scripts -->
-	<script src="js/bulma_extend_v2.js" type="text/javascript"></script>
+	<script src="js/bulma_extend.js" type="text/javascript"></script>
 
 </head>
 <body>
