@@ -2,6 +2,28 @@
 // compileOnSave: false
 //==========================================================================//
 .dropdown-list {
+    .has-dropdown {
+        position: relative;
+        padding-right: 15px;
+        -webkit-transition: all .35s ease-in-out;
+        transition: all .35s ease-in-out;
+        &:after {
+            content: '\25bc';
+            font-size: 10px;
+            line-height: 1;
+            position: absolute;
+            height: 10px;
+            right: 10px; top: 0; bottom: 0;
+            margin: auto;
+        }
+
+        &.is-active {
+            &:after {
+                content: '\25b2';
+            }
+        }
+    }
+
     li ul {
         display: none;
         &.active-dropdown {
