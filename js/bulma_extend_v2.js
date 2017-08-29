@@ -137,8 +137,11 @@ bulma.functions = (function () {
                 settings.initStartFinished,
                 settings.initEndFinished
             );
-        }).toggleClass(settings.elmTargetClass);
+        })
+        // toggle active class on target
+        .toggleClass(settings.elmTargetClass);
 
+        // toggle active class on trigger
         jQuery(settings.trigger).toggleClass(settings.elmTriggerClass);
 
         // callback on animation init
